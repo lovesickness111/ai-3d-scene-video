@@ -14,6 +14,37 @@ lồng tiếng TTS và ghép bằng ffmpeg. Kết quả tái lập được 100%
 Cả hai dùng chung `tts.py`, `accent_check.py`, `make_video.py`. Model GLB tải qua
 `.claude/skills/threejs-3d-video/templates/fetch_assets.py` (chỉ cần GitHub).
 
+## Sản phẩm mẫu
+
+Mọi hình dưới đây sinh ra từ code trong repo, không chỉnh tay. Video đầy đủ (2–4 phút, 1280×720, có tiếng)
+nằm trong `output/` không đưa lên git; GIF là đoạn 9 giây cắt từ đó.
+
+**Video hỏi-đáp dev ↔ mascot Claude** — Blender/Cycles, bong bóng chữ chạy theo giọng, thẻ minh họa vẽ bằng Pillow.
+
+![Đoạn video hỏi-đáp render bằng Blender](docs/showcase/qa_demo_blender.gif)
+
+| ![Thẻ "Decision API làm gì?"](docs/showcase/qa_decision_card.jpg) | ![Thẻ số liệu "Chấm một khung hình"](docs/showcase/apps_metrics_card.jpg) |
+|---|---|
+| Khung có thẻ sơ đồ (`conversation.json`) | Khung có thẻ số liệu (`conversation_decision_apps.json`) |
+
+**Cùng kịch bản, đường three.js + Chrome headless** — nhân vật dev là model GLB Quaternius, ~0,4 s/khung.
+
+![Đoạn video render bằng three.js](docs/showcase/decision_threejs.gif)
+
+| ![Dev GLB trong phòng three.js](docs/showcase/threejs_dev_glb.jpg) | ![Thumbnail video bài học](docs/showcase/lessons_thumbnail.jpg) |
+|---|---|
+| Khung từ `output/decision_full` | Thumbnail ghép từ các khung (`conversation_lessons_*.json`) |
+
+**Ảnh tĩnh và thử nghiệm nhân vật**
+
+| ![Dev và mascot dựng từ primitive](docs/showcase/programmer_mascot_still.jpg) | ![Knight cốc đầu Rogue (KayKit)](docs/showcase/kaykit_head_knock.jpg) |
+|---|---|
+| Cảnh đầu tiên, dev + mascot từ primitive (`scripts/demo_programmer_mascot.py`) | Hai nhân vật KayKit, pose = animation có sẵn (`scripts/kaykit_knock.py`) |
+
+| ![9 nhân vật KayKit](docs/showcase/kaykit_lineup.jpg) | ![7 nhân vật văn phòng Quaternius](docs/showcase/quaternius_office_lineup.jpg) |
+|---|---|
+| KayKit Adventurers + Skeletons (CC0), 76 animation mỗi nhân vật | Quaternius Modular Men/Women (CC0): Suit, Casual, Worker, Formal |
+
 ## Cần có
 
 - Blender 4.5 trong `tools/blender-4.5.*-windows-x64/` hoặc biến môi trường `BLENDER_PATH`
