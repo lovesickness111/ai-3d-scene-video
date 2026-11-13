@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>three.js Q&A video</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #000;
+               font-family: "Segoe UI", system-ui, sans-serif; color: #262a33; }
+  #stage { position: relative; width: 1280px; height: 720px; }
+  canvas { position: absolute; left: 0; top: 0; }
+  /* speech text, inside the rectangle inscribed in the 3D bubble's screen box; words not yet
+     spoken are kept in the layout but invisible, so nothing reflows as they appear */
+  #bubble { position: absolute; display: flex; align-items: center; justify-content: center;
+            text-align: center; line-height: 1.3; overflow: hidden; }
+  #bubble b { color: var(--accent); }
+  #bubble .w { visibility: hidden; }
+  #bubble .w.on { visibility: visible; }
+  /* illustration cards: plain HTML panels */
+  .card { position: absolute; background: #fff; border-radius: 26px; padding: 30px; display: none;
+          box-shadow: 0 12px 30px rgba(120,108,92,.35); box-sizing: border-box; overflow: hidden; }
+  .card .bar { width: 44px; height: 6px; border-radius: 3px; background: var(--accent); margin-bottom: 14px; }
+  .card h2 { margin: 0 0 22px; font-size: 30px; }
+  .muted { color: #80848e; }
+  .node { border-radius: 18px; background: #f6f3ee; display: flex; align-items: center; justify-content: center;
+          text-align: center; font-size: 19px; padding: 10px 14px; box-sizing: border-box; }
+  .node.model { background: var(--accent); color: #fff; font-weight: 700; }
+  .arrow { color: #80848e; font-size: 26px; text-align: center; }
+  .track { height: 12px; border-radius: 6px; background: #e8e4dd; }
+  .fill { height: 12px; border-radius: 6px; background: #c6c2bc; }
+  .fill.hot { background: var(--accent); }
+  .pill { background: var(--tint); border-radius: 21px; height: 42px; padding: 0 16px; display: inline-flex;
+          align-items: center; font-size: 18px; }
+  .pill.chip { background: #f6f3ee; height: 32px; padding: 0 12px; font-size: 17px; }
+  .pill.chip.off { background: none; border: 2px solid #e8e4dd; color: #80848e; text-decoration: line-through; }
+  .pill.solid { background: var(--accent); color: #fff; font-weight: 700; font-size: 24px; height: 60px; padding: 0 28px; }
+  .rows { display: grid; row-gap: 14px; }
+  .row { display: grid; grid-template-columns: 1fr 230px 64px; align-items: center; column-gap: 14px; font-size: 20px; }
+  .row b { text-align: right; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .tile { background: #f6f3ee; border-radius: 18px; padding: 18px 20px; }
+  .tile h3 { margin: 0 0 8px; font-size: 21px; }
+  .tile .pill { height: 34px; font-size: 16px; }
+  /* title card: flat 2D backdrop behind the cut-out characters, text on the right */
+  #stage.title { background: #f1ece4; }
+  #stage.title canvas { background: transparent; }
+  #stage.title::before { content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 18% 78%, #c95e34 0 170px, transparent 171px),
+      radial-gradient(circle at 46% 20%, #e0a838 0 110px, transparent 111px),
+      radial-gradient(circle at 92% 14%, #21335c 0 90px, transparent 91px),
+      linear-gradient(135deg, #f6f1ea 0%, #e9eef0 100%);
+    opacity: .92; }
+  #title { display: none; position: absolute; left: 660px; top: 130px; width: 590px; color: #262a33; }
+  #title h1 { margin: 0; font-size: 54px; line-height: 1.12; font-weight: 800; letter-spacing: -.5px; }
+  #title h1 em { font-style: normal; color: #c95e34; }
+  #title .sub { margin-top: 26px; font-size: 28px; color: #4f5560; }
+  #title .sub b { color: #3a68b0; }
+  #title .sub .claude { color: #c95e34; font-weight: 700; }
+  /* the mascot on the title card is the old 2D render, pinned to the bottom-right corner */
+  #title-mascot { display: none; position: absolute; right: 30px; bottom: -40px; height: 380px;
+                  filter: drop-shadow(0 14px 18px rgba(60,40,30,.25)); }
+  #stage.title #title-mascot { display: block; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" width="1280" height="720"></canvas>
+  <div id="bubble"></div>
+
+  <div class="card" id="card-definition">
+    <div class="bar"></div><h2>Decision API làm gì?</h2>
+    <div style="display:grid;grid-template-columns:1fr 40px .85fr 40px 1.15fr;align-items:center;height:190px">
+      <div class="node" style="height:100%">Câu hỏi<br>+ các phương án</div>
+      <div class="arrow">➜</div>
+      <div class="node model" style="height:100%;font-size:22px">Decision<br>Model</div>
+      <div class="arrow">➜</div>
+      <div class="node" style="height:100%;flex-direction:column;justify-content:center;gap:18px;align-items:stretch">
+        <div style="font-size:19px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Có</span><b>92%</b></div><div class="track"><div class="fill hot" style="width:92%"></div></div></div>
+        <div style="font-size:19px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Không</span><b>8%</b></div><div class="track"><div class="fill" style="width:8%"></div></div></div>
+      </div>
+    </div>
+    <div class="muted" style="margin-top:36px;font-size:18px">3 kiểu câu hỏi:</div>
+    <div style="display:flex;gap:10px;margin-top:12px"><span class="pill">Có / Không</span><span class="pill">Chọn 1 trong nhiều</span><span class="pill">Chấm theo thang</span></div>
+  </div>
+
+  <div class="card" id="card-providers">
+    <div class="bar"></div><h2>3 ông làm Decision API</h2>
+    <div style="display:grid;grid-template-columns:150px 1fr 190px;column-gap:14px;align-items:center;row-gap:0">
+      <div></div><div class="muted" style="font-size:17px">Nhận đầu vào</div><div class="muted" style="font-size:17px">Mỗi lần gọi</div>
+      <div style="grid-column:1/-1;border-top:2px solid #e8e4dd;margin:10px 0 14px"></div>
+      <div style="font-size:25px;font-weight:700">Gemini</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="pill chip">Chữ</span><span class="pill chip">Ảnh</span><span class="pill chip">Âm thanh</span><span class="pill chip">Video</span><span class="pill chip">PDF</span></div>
+      <div><div style="font-size:32px;font-weight:700;line-height:1">1.000</div><div class="muted" style="font-size:15px">câu</div></div>
+      <div style="grid-column:1/-1;border-top:2px solid #e8e4dd;margin:16px 0"></div>
+      <div style="font-size:25px;font-weight:700">OpenAI</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="pill chip">Chữ</span><span class="pill chip">Ảnh</span><span class="pill chip">JSON</span><span class="pill chip off">Âm thanh</span></div>
+      <div><div style="font-size:32px;font-weight:700;line-height:1">400</div><div class="muted" style="font-size:15px">câu</div></div>
+      <div style="grid-column:1/-1;border-top:2px solid #e8e4dd;margin:16px 0"></div>
+      <div><div style="font-size:25px;font-weight:700">Jev</div><span class="pill" style="height:24px;font-size:15px;font-weight:700;color:var(--accent);padding:0 10px">Tiên phong</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="pill chip">Chữ</span><span class="pill chip">Ảnh</span></div>
+      <div><div style="font-size:32px;font-weight:700;line-height:1">∞</div><div class="muted" style="font-size:15px">chỉ giới hạn độ dài</div></div>
+    </div>
+  </div>
+
+  <div class="card" id="card-pricing">
+    <div class="bar"></div><h2>Giá: rẻ như cho</h2>
+    <div class="muted" style="font-size:18px;margin-bottom:18px">USD cho 1 triệu token đầu vào (thấp hơn = rẻ hơn)</div>
+    <div class="rows" style="row-gap:26px">
+      <div class="row" style="grid-template-columns:110px 1fr 90px"><span>Gemini</span><div class="track"><div class="fill" style="width:83%"></div></div><b>0,10 $</b></div>
+      <div class="row" style="grid-template-columns:110px 1fr 90px"><span>OpenAI</span><div class="track"><div class="fill" style="width:83%"></div></div><b>0,10 $</b></div>
+      <div class="row" style="grid-template-columns:110px 1fr 90px"><b style="text-align:left">Jev</b><div class="track"><div class="fill hot" style="width:35%"></div></div><b>0,042 $</b></div>
+    </div>
+    <div style="margin-top:40px"><span class="pill">Cả 3: không tính tiền phần trả lời</span></div>
+  </div>
+
+  <div class="card" id="card-benchmark">
+    <div class="bar"></div><h2>Điểm Artificial Analysis</h2>
+    <div class="muted" style="font-size:18px;margin-bottom:18px">Điểm chấm độc lập (cao hơn = tốt hơn) và thời gian mỗi việc</div>
+    <div class="rows" style="row-gap:22px">
+      <div class="row" style="grid-template-columns:110px 1fr 60px 120px"><span>Drex Max</span><div class="track"><div class="fill" style="width:91%"></div></div><b>72,6</b><span></span></div>
+      <div class="row" style="grid-template-columns:110px 1fr 60px 120px"><b style="text-align:left">Jev</b><div class="track"><div class="fill hot" style="width:83%"></div></div><b>66,2</b><span class="muted" style="font-size:16px;text-align:right">92 ms / việc</span></div>
+      <div class="row" style="grid-template-columns:110px 1fr 60px 120px"><span>Gemini</span><div class="track"><div class="fill" style="width:82%"></div></div><b>66,0</b><span class="muted" style="font-size:16px;text-align:right">211 ms / việc</span></div>
+      <div class="row" style="grid-template-columns:110px 1fr 60px 120px"><span>OpenAI</span><div class="track"><div class="fill" style="width:75%"></div></div><b>60,3</b><span></span></div>
+    </div>
+  </div>
+
+  <div class="card" id="card-router">
+    <div class="bar"></div><h2>Điều phối model theo độ khó</h2>
+    <div style="display:grid;grid-template-columns:1fr 40px 1fr 40px 1.3fr;align-items:center;height:170px">
+      <div class="node" style="height:100%">Câu hỏi<br>của người dùng</div>
+      <div class="arrow">➜</div>
+      <div class="node model" style="height:100%">Decision<br>Model:<br>độ khó?</div>
+      <div class="arrow">➜</div>
+      <div style="display:grid;row-gap:14px">
+        <div class="node" style="justify-content:space-between"><span>Dễ → model nhỏ</span><b>70%</b></div>
+        <div class="node" style="justify-content:space-between"><span>Khó → model to</span><b>30%</b></div>
+      </div>
+    </div>
+    <div class="muted" style="margin:26px 0 10px;font-size:18px">Chi phí mỗi 1.000 câu (ví dụ minh họa)</div>
+    <div class="rows">
+      <div class="row"><span>Gọi model to cho tất cả</span><div class="track"><div class="fill" style="width:100%"></div></div><b>100%</b></div>
+      <div class="row"><span>Có điều phối</span><div class="track"><div class="fill hot" style="width:45%"></div></div><b>45%</b></div>
+    </div>
+  </div>
+
+  <div class="card" id="card-video_qa">
+    <div class="bar"></div><h2>Chấm một khung hình</h2>
+    <div class="muted" style="font-size:18px;margin-bottom:16px">Mỗi câu hỏi → một xác suất "đạt"</div>
+    <div class="rows" style="row-gap:20px">
+      <div class="row"><span>Chữ không bị cắt mép?</span><div class="track"><div class="fill hot" style="width:97%"></div></div><b>97%</b></div>
+      <div class="row"><span>Nhân vật nằm trong khung?</span><div class="track"><div class="fill hot" style="width:96%"></div></div><b>96%</b></div>
+      <div class="row"><span>Thẻ số liệu không che mặt?</span><div class="track"><div class="fill hot" style="width:89%"></div></div><b>89%</b></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:18px;margin-top:34px">
+      <span class="pill solid">Cảnh này: ĐẠT · 94%</span>
+      <span class="muted" style="font-size:18px">dưới 80% → render lại</span>
+    </div>
+  </div>
+
+  <div class="card" id="card-usecases">
+    <div class="bar"></div><h2>Chỗ nào cần quyết nhanh, rẻ, hàng loạt</h2>
+    <div class="grid2">
+      <div class="tile"><h3>Lọc bình luận rác</h3><span class="pill">Có / Không</span></div>
+      <div class="tile"><h3>Phân loại ticket về đúng đội</h3><span class="pill">Chọn 1 trong nhiều</span></div>
+      <div class="tile"><h3>Chấm chất lượng câu trả lời</h3><span class="pill">Thang 1 → 5</span></div>
+      <div class="tile"><h3>Chọn ảnh bìa hút hơn</h3><span class="pill">So 2 phương án</span></div>
+    </div>
+  </div>
+
+  <div class="card" id="card-verdict">
+    <div class="bar"></div><h2>Video này có hài không?</h2>
+    <div class="muted" style="font-size:18px;margin-bottom:16px">Xác suất "hài" cho phần của mỗi người</div>
+    <div class="rows" style="row-gap:22px">
+      <div class="row"><span>Phần Claude nói</span><div class="track"><div class="fill hot" style="width:91%"></div></div><b>91%</b></div>
+      <div class="row"><span>Phần dev nói</span><div class="track"><div class="fill" style="width:12%"></div></div><b>12%</b></div>
+    </div>
+    <div style="margin-top:40px"><span class="pill solid">Kết luận: Claude hài hơn</span></div>
+    <div class="muted" style="font-size:17px;margin-top:14px">Chấm bởi Decision Model trong 92 ms. Không chịu trách nhiệm về cảm xúc.</div>
+  </div>
+
+  <div class="card" id="card-loop">
+    <div class="bar"></div><h2>Vòng lặp của agent</h2>
+    <div style="display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;align-items:center;height:150px;margin-top:10px">
+      <div class="node" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">⌨️</span>Viết code</div><div class="arrow">➜</div>
+      <div class="node" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">🎬</span>Render thử<br>vài frame</div><div class="arrow">➜</div>
+      <div class="node" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">👀</span>Xem ảnh</div><div class="arrow">➜</div>
+      <div class="node model" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">✏️</span>Sửa code</div>
+    </div>
+    <div class="muted" style="margin-top:28px;font-size:19px;text-align:center">↺ vài chục giây một vòng · chạy lại ra đúng y · mỗi thay đổi là một commit</div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px"><span class="pill">CLI</span><span class="pill">headless</span><span class="pill">không GUI</span></div>
+  </div>
+
+  <div class="card" id="card-compare">
+    <div class="bar"></div><h2>Blender hay three.js?</h2>
+    <div style="display:grid;grid-template-columns:150px 1fr 1fr;row-gap:12px;column-gap:14px;align-items:center;font-size:19px">
+      <div></div><div style="font-weight:700;font-size:22px">Blender (Cycles)</div><div style="font-weight:700;font-size:22px;color:var(--accent)">three.js</div>
+      <div style="grid-column:1/-1;border-top:2px solid #e8e4dd"></div>
+      <div class="muted">Giống gì</div><div>Xưởng phim</div><div>Game engine trong Chrome</div>
+      <div class="muted">Một frame</div><div><b>30 giây</b></div><div><b>0,5 giây</b></div>
+      <div class="muted">Ánh sáng</div><div>Mềm, bóng đẹp</div><div>Phẳng hơn</div>
+      <div class="muted">Chữ</div><div>Vẽ sau bằng Pillow</div><div>HTML, sắc nét</div>
+      <div class="muted">Hợp với</div><div>Key visual, ảnh đẹp</div><div>Video explainer, nói chuyện</div>
+    </div>
+    <div style="margin-top:22px"><span class="pill">Phác bằng three.js → chốt → bê số đo sang Blender nếu cần đẹp</span></div>
+  </div>
+
+  <div class="card" id="card-team">
+    <div class="bar"></div><h2>Một đội model, không phải một mình</h2>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="tile"><div style="font-size:34px">🧠👀</div><h3>Nghĩ và nhìn</h3><div class="muted" style="font-size:16px">viết code · đọc ảnh render · quyết bố cục</div><span class="pill" style="margin-top:10px">Claude Opus 5.5 · Fable 5.1</span></div>
+      <div class="tile"><div style="font-size:34px">🗣️👂</div><h3>Đọc và nghe</h3><div class="muted" style="font-size:16px">đọc giọng Bắc · chấm accent từng clip</div><span class="pill" style="margin-top:10px">Gemini TTS · Gemini audio</span></div>
+      <div class="tile"><div style="font-size:34px">🔁</div><h3>Lặp hàng loạt</h3><div class="muted" style="font-size:16px">soát khung hình · phân loại · có/không</div><span class="pill" style="margin-top:10px">Claude Haiku 5.5 (rẻ ~40×)</span></div>
+    </div>
+    <div class="muted" style="margin-top:22px;font-size:18px">Việc cần suy nghĩ → model mạnh. Việc lặp hàng loạt → model rẻ. Việc nghe → model biết nghe.</div>
+  </div>
+
+  <div class="card" id="card-rules">
+    <div class="bar"></div><h2>7 best practice</h2>
+    <div class="rows" style="row-gap:12px;font-size:20px">
+      <div><b style="color:var(--accent)">1</b>&nbsp; Render thử trước, render full sau</div>
+      <div><b style="color:var(--accent)">2</b>&nbsp; Báo chi phí trước khi chạy — "49 frame, 25 phút"</div>
+      <div><b style="color:var(--accent)">3</b>&nbsp; TTS trước, dựng hình sau</div>
+      <div><b style="color:var(--accent)">4</b>&nbsp; Chữ và bảng số để layer riêng</div>
+      <div><b style="color:var(--accent)">5</b>&nbsp; Góp ý ghi thành rule trong file skill</div>
+      <div class="muted"><b>6</b>&nbsp; …</div>
+      <div class="muted"><b>7</b>&nbsp; …</div>
+    </div>
+  </div>
+
+  <div class="card" id="card-packs">
+    <div class="bar"></div><h2>Tải pack model miễn phí, đừng tự dựng</h2>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="tile"><div style="font-size:34px">🧍</div><h3>Nhân vật</h3><div class="muted" style="font-size:16px">có sẵn animation đi, ngồi, vẫy tay</div></div>
+      <div class="tile"><div style="font-size:34px">🪑🚗🌳</div><h3>Nội thất, xe, cây</h3><div class="muted" style="font-size:16px">hàng nghìn file GLB</div></div>
+      <div class="tile"><div style="font-size:34px">🔍</div><h3>Kiểm trước khi dùng</h3><div class="muted" style="font-size:16px">license (CC0?) · tỉ lệ (chibi vs người thật)</div></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:22px;align-items:center"><span class="muted" style="font-size:18px">Nguồn:</span><span class="pill">Kenney</span><span class="pill">KayKit</span><span class="pill">Quaternius</span></div>
+  </div>
+
+  <div class="card" id="card-tokens">
+    <div class="bar"></div><h2>Tiết kiệm token của chính agent</h2>
+    <div class="rows" style="row-gap:14px;font-size:20px;margin-top:6px">
+      <div>🖼️&nbsp; <b>Ảnh ngốn token nhất</b> → ghép 12 khung thành 1 contact sheet, đọc 1 lần</div>
+      <div>🔍&nbsp; Render thử ở <b>độ phân giải thấp</b></div>
+      <div>📜&nbsp; Log dài → <b>lọc dòng lỗi</b>, không đọc cả nghìn dòng</div>
+      <div>🔁&nbsp; Việc lặp hàng loạt → <b>model nhỏ</b> (Haiku rẻ hơn Opus ~40×)</div>
+      <div>📒&nbsp; Rule ghi vào <b>skill</b> → phiên sau không mò lại</div>
+    </div>
+  </div>
+
+  <div class="card" id="card-cta" style="display:none;text-align:center">
+    <div class="bar" style="margin:0 auto 14px"></div><h2>Thấy hay thì…</h2>
+    <div style="display:flex;flex-direction:column;gap:22px;align-items:center;margin-top:40px">
+      <span class="pill solid" style="font-size:30px;height:76px;padding:0 36px">👍 Like</span>
+      <span class="pill solid" style="font-size:30px;height:76px;padding:0 36px;background:#3a68b0">➕ Follow Dev xịn</span>
+    </div>
+    <div class="muted" style="margin-top:34px;font-size:18px">để có tiền điện cho Claude render tiếp</div>
+  </div>
+
+  <img id="title-mascot" src="assets/avatar_claude.png" alt="">
+  <div id="title">
+    <h1>Giải thích <em>Model quyết định</em> (Jev) và ứng dụng trong dựng Video</h1>
+    <div class="sub">Cast: <b>Dev xịn</b> và <span class="claude">Claude mỏ hỗn</span></div>
+  </div>
+</div>
+<script src="bundle.js"></script>
+</body>
+</html>

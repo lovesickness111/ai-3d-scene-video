@@ -1,0 +1,130 @@
+[
+  {
+    "speaker": "dev",
+    "text": "Ê Claude ơi, dạo này tao thấy đang hot cái model Jev rủng gì đó. Mày cho tao biết nó là gì được không?"
+  },
+  {
+    "speaker": "claude",
+    "text": "À, cái đó là \"**Decision API**\" đó mày. Đây, mày nhìn lên cái hình này cho dễ hiểu nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "definition",
+    "text": "Nó không ngồi viết văn trả lời đâu, chỉ chọn trong mấy phương án có sẵn thôi: có/không, chọn 1 trong nhiều, hoặc chấm điểm theo thang. Ra một con số **xác suất**, phần mềm tự quyết rẽ nhánh tiếp. Đúng kiểu lười mà khôn, nên chạy **nhanh và rẻ điên** luôn."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ơ, lười mà cũng được việc à? Thế đứa nào đang làm cái này?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Có 3 ông: **Google Gemini Decision 1**, **OpenAI Decisions**, với **Jev** của hãng TypeSafe — mà Jev mới là đứa mở đường cho cả dòng này đó. Đây, mày nhìn lên bảng so sánh này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "providers",
+    "text": "Gemini ăn tạp, nhận chữ, ảnh, âm thanh, video, PDF đủ cả; OpenAI nhận chữ, ảnh, JSON nhưng không rinh âm thanh; Jev chỉ ăn chữ với ảnh. Mỗi lần gọi Gemini nhận tới **1.000 câu**, OpenAI **400 câu**, Jev **không giới hạn** số câu, chỉ giới hạn độ dài."
+  },
+  {
+    "speaker": "dev",
+    "text": "Nghe cũng ngon đấy. Mà giá cả sao mày, có đắt không?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Rẻ như cho luôn. Đây, mày nhìn lên bảng giá này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "pricing",
+    "text": "Gemini với OpenAI ngang nhau, **0,10 đô** mỗi triệu token. Jev rẻ nhất, chỉ **0,042 đô** — gần nửa giá luôn. Cả 3 ông đều **không tính tiền phần trả lời**, yên tâm."
+  },
+  {
+    "speaker": "dev",
+    "text": "Rẻ thế thì tao khoái rồi. Vậy đứa nào xài ngon hơn?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Tùy mày tin ai thôi. Google tự chấm thì Gemini thắng **5/7 bài** so với OpenAI và Jev. Nhưng bên chấm độc lập Artificial Analysis thì khác. Đây, mày nhìn lên mấy cột điểm này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "benchmark",
+    "text": "Jev **66,2 điểm** mà chỉ tốn **92 mili-giây** một việc — nhanh điên; Gemini **66,0 điểm** nhưng tốn 211 mili-giây; OpenAI thấp nhất 60,3 điểm. Đứng đầu cả bảng là Drex Max, **72,6 điểm**."
+  },
+  {
+    "speaker": "dev",
+    "text": "Thế tóm lại tao nên chọn con nào đây?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Chỉ xử lý chữ thì chọn Jev cho rẻ với nhanh. Đụng âm thanh, video thì bắt buộc phải Gemini."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ok, hiểu rồi. Mà nói lý thuyết thế thôi, tao vẫn chưa hình dung dùng nó vào việc gì thật. Mày cho tao vài ví dụ đi."
+  },
+  {
+    "speaker": "claude",
+    "text": "Ví dụ gần nhất là ngay trong cái agent của mày đấy. Đây, mày nhìn lên sơ đồ này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "router",
+    "text": "Câu hỏi nào vào, cho model decision chấm **độ khó** trước: dễ thì đẩy sang model nhỏ cho rẻ, khó mới gọi model to. Giả sử **7 trong 10** câu là dễ, mày cắt được **hơn nửa tiền** mà người dùng không thấy khác gì."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ơ hay, thế nó thành đứa gác cửa chọn model à? Mà nó chấm nhanh không, chứ chậm thì lại tốn thêm."
+  },
+  {
+    "speaker": "claude",
+    "text": "Nhanh lắm, cỡ **một phần mười giây**, tốn vài phần nghìn so với câu trả lời thật. Chưa hết, tao còn dùng nó cho việc làm video của mày nữa."
+  },
+  {
+    "speaker": "dev",
+    "text": "Làm video? Liên quan gì?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Mỗi khung hình render ra, thay vì mày ngồi soi từng cái, cho nó chấm hộ. Đây, mày nhìn lên bảng này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "video_qa",
+    "text": "Tao đưa ảnh vào kèm câu hỏi: chữ có bị **cắt mép** không, nhân vật có **lọt khỏi khung** không, thẻ số liệu có **che mặt** không. Mỗi câu ra một xác suất đạt. Cảnh nào dưới ngưỡng thì tự render lại, không cần mày xem."
+  },
+  {
+    "speaker": "dev",
+    "text": "Tức là nó tự chấm cái video này luôn hả?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Ừ, cảnh mày đang nhìn vừa được chấm 94% đạt đấy. Mà còn nhiều việc kiểu này lắm. Đây, mày nhìn lên mấy ô này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "usecases",
+    "text": "Lọc bình luận rác: **có hay không**. Phân loại ticket về đúng đội: **chọn 1 trong nhiều**. Chấm chất lượng câu trả lời: **thang 1 đến 5**. Chọn ảnh bìa nào hút hơn: **so hai phương án**. Cứ chỗ nào cần quyết nhanh, rẻ, hàng loạt là nó vào."
+  },
+  {
+    "speaker": "dev",
+    "text": "Nghe được đấy. Vậy tao đem về bảo sếp chuyển hết công ty sang dùng nhé?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Từ từ. Nó chỉ chọn trong phương án có sẵn, không nghĩ ra cái mới, và vẫn chấm sai một tỉ lệ nhất định. Việc nào sai một lần là mất tiền thật thì vẫn phải có người soi."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ok, hiểu rồi. Hỏi nốt câu này: cho nó chấm luôn cái video này đi, xem hai đứa mình nói có hài không?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Tao chấm rồi. Đây, mày nhìn lên kết quả này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "verdict",
+    "text": "Độ hài hước của tao là **91%**, còn mày hài nhạt lắm."
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "speaker": "dev",
+    "text": "Ê Claude ơi, dạo này tao thấy đang hot cái model Jev rủng gì đó. Mày cho tao biết nó là gì được không?"
+  },
+  {
+    "speaker": "claude",
+    "text": "À, cái đó là \"**Decision API**\" đó mày. Đây, mày nhìn lên cái hình này cho dễ hiểu nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "definition",
+    "text": "Nó không ngồi viết văn trả lời đâu, chỉ chọn trong mấy phương án có sẵn thôi: có/không, chọn 1 trong nhiều, hoặc chấm điểm theo thang. Ra một con số **xác suất**, phần mềm tự quyết rẽ nhánh tiếp. Đúng kiểu lười mà khôn, nên chạy **nhanh và rẻ điên** luôn."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ơ, lười mà cũng được việc à? Thế đứa nào đang làm cái này?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Có 3 ông: **Google Gemini Decision 1**, **OpenAI Decisions**, với **Jev** của hãng TypeSafe — mà Jev mới là đứa mở đường cho cả dòng này đó. Đây, mày nhìn lên bảng so sánh này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "providers",
+    "text": "Gemini ăn tạp, nhận chữ, ảnh, âm thanh, video, PDF đủ cả; OpenAI nhận chữ, ảnh, JSON nhưng không rinh âm thanh; Jev chỉ ăn chữ với ảnh. Mỗi lần gọi Gemini nhận tới **1.000 câu**, OpenAI **400 câu**, Jev **không giới hạn** số câu, chỉ giới hạn độ dài."
+  },
+  {
+    "speaker": "dev",
+    "text": "Nghe cũng ngon đấy. Mà giá cả sao mày, có đắt không?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Rẻ như cho luôn. Đây, mày nhìn lên bảng giá này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "pricing",
+    "text": "Gemini với OpenAI ngang nhau, **0,10 đô** mỗi triệu token. Jev rẻ nhất, chỉ **0,042 đô** — gần nửa giá luôn. Cả 3 ông đều **không tính tiền phần trả lời**, yên tâm."
+  },
+  {
+    "speaker": "dev",
+    "text": "Rẻ thế thì tao khoái rồi. Vậy đứa nào xài ngon hơn?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Tùy mày tin ai thôi. Google tự chấm thì Gemini thắng **5/7 bài** so với OpenAI và Jev. Nhưng bên chấm độc lập Artificial Analysis thì khác. Đây, mày nhìn lên mấy cột điểm này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "benchmark",
+    "text": "Jev **66,2 điểm** mà chỉ tốn **92 mili-giây** một việc — nhanh điên; Gemini **66,0 điểm** nhưng tốn 211 mili-giây; OpenAI thấp nhất 60,3 điểm. Đứng đầu cả bảng là Drex Max, **72,6 điểm**."
+  },
+  {
+    "speaker": "dev",
+    "text": "Thế tóm lại tao nên chọn con nào đây?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Chỉ xử lý chữ thì chọn Jev cho rẻ với nhanh. Đụng âm thanh, video thì bắt buộc phải Gemini."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ok, hiểu rồi. Hỏi nốt câu cuối nha: tao học xong cái này, sếp có tăng lương cho tao không?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Câu này để tao trả lời kiểu Decision API cho nhanh. Đây, mày nhìn lên hình này nha."
+  },
+  {
+    "speaker": "claude",
+    "illustration": "raise",
+    "text": "**Không**. Xác suất **99%**."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ơ cái con này! Thôi, mày quay lại viết văn dài dòng đi cho tao nhờ."
+  }
+]

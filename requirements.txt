@@ -1,0 +1,10 @@
+# CPU-only depth estimation for scripts/photo_parallax.py.
+# Install torch first from the CPU index, then this file:
+#   .venv/Scripts/python.exe -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   .venv/Scripts/python.exe -m pip install -r requirements.txt
+transformers
+pillow
+numpy
+# Voices for tts.py: piper runs offline, edge-tts needs speech.platform.bing.com reachable.
+piper-tts
+edge-tts

@@ -1,0 +1,15 @@
+{
+  "name": "threejs-preview",
+  "private": true,
+  "description": "Experiment: the qa_demo room, dev and mascot rebuilt in three.js, 3 frames captured headless to compare with the Blender render",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild scene.js --bundle --format=iife --outfile=bundle.js",
+    "shoot": "node shoot.mjs"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.0",
+    "playwright-core": "^1.50.0",
+    "three": "^0.187.0"
+  }
+}

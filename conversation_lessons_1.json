@@ -1,0 +1,74 @@
+[
+  {
+    "speaker": "dev",
+    "text": "Ê Claude, tao thấy gần đây nhiều người dựng video 3D bằng AI. Mà tao thắc mắc: Claude tự mở phần mềm 3D lên để điều khiển à?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Không, tao không mở GUI nào cả. Tao ngồi trong **CLI**, viết **code** mô tả cảnh — phòng, bàn, đèn, camera — rồi gọi Blender hoặc three.js chạy **headless**, render xong trả về ảnh. Đây, mày nhìn lên hình này nha."
+  },
+  {
+    "speaker": "claude",
+    "text": "Vòng lặp của tao có 4 bước: **viết code → render thử vài frame → xem ảnh → sửa code**. Vì cả cảnh nằm trong code nên chạy lại là ra **đúng y** ảnh cũ, đổi một tham số là đổi một chi tiết, và mọi thay đổi đều là một **commit** mày xem lại được.",
+    "illustration": "loop"
+  },
+  {
+    "speaker": "dev",
+    "text": "Tức là lúc dựng mày không nhìn thấy cảnh, chỉ nhìn ảnh render ra?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Đúng. Giống đạo diễn **bịt mắt** chỉ đạo qua điện thoại: dặn xong bảo máy chụp thử, nhìn ảnh, dặn lại. Khác là mỗi vòng của tao chỉ vài chục giây."
+  },
+  {
+    "speaker": "dev",
+    "text": "Mà render bằng gì? Blender hay three.js?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Hai engine, hai tính cách. Đây, mày nhìn lên bảng này nha."
+  },
+  {
+    "speaker": "claude",
+    "text": "**Blender** với Cycles như xưởng phim: ánh sáng mềm, bóng đẹp, nhưng mỗi frame chờ **30 giây**. **Three.js** chạy trong Chrome headless như game engine: mỗi frame **nửa giây**, chữ là HTML nên sắc nét, đổi lại ánh sáng phẳng hơn. Video explainer, nói chuyện: three.js. Key visual cần đẹp từng vệt sáng: Blender.",
+    "illustration": "compare"
+  },
+  {
+    "speaker": "dev",
+    "text": "Chênh 60 lần! Thế dùng cái nhanh thôi?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Mẹo là dùng **cả hai theo thứ tự**: phác bố cục bằng three.js, chốt xong, cần đẹp thì bê nguyên tọa độ, màu, góc camera sang Blender. Cùng một bộ số, hai cái engine."
+  },
+  {
+    "speaker": "dev",
+    "text": "Còn giọng? Mày đọc luôn hả?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Tao **không có tai**, nên không tự đọc mà cũng không tự nghe được. Đây, mày nhìn lên nha."
+  },
+  {
+    "speaker": "claude",
+    "text": "Giọng để **Gemini TTS** đọc, rồi nhờ **Gemini audio** chấm từng clip xem giọng Bắc hay Nam, câu nào lệch thì đọc lại. Tao giữ việc **nghĩ và nhìn** — viết code, đọc ảnh render, quyết bố cục — chạy bằng **Claude Opus 5.5**, hoặc **Fable 5.1** khi cần mạnh nhất. Việc lặp hàng loạt giao **Claude Haiku 5.5**, rẻ hơn Opus cỡ bốn mươi lần. Một **đội model**, không phải một mình.",
+    "illustration": "team"
+  },
+  {
+    "speaker": "dev",
+    "text": "Nghe ngon. Nhưng tao thấy nhiều người than dựng kiểu này đốt tiền render lắm?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Đốt là do làm sai thứ tự. Tao có **6 best practice** để không đốt, nhưng dài, để clip sau."
+  },
+  {
+    "speaker": "dev",
+    "text": "Ok. Vậy bà con **like với follow Dev xịn** để không lỡ clip sau nha.",
+    "illustration": "cta"
+  },
+  {
+    "speaker": "claude",
+    "text": "Chưa follow thì clip sau tao kể… cho người khác."
+  }
+]

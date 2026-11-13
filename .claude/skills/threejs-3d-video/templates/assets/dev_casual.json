@@ -1,0 +1,94 @@
+[
+  {
+    "file": "quaternius/ModularMen_Casual.glb",
+    "role": "dev",
+    "replaceDev": true,
+    "asIs": true,
+    "loc": [
+      -0.05,
+      -0.85,
+      0
+    ],
+    "yaw": 112,
+    "offset": [
+      0,
+      0,
+      -0.42
+    ],
+    "pose": {
+      "Abdomen": [
+        8,
+        0,
+        0
+      ],
+      "Head": [
+        -6,
+        0,
+        0
+      ],
+      "UpperLeg.L": [
+        [
+          "side",
+          85
+        ]
+      ],
+      "UpperLeg.R": [
+        [
+          "side",
+          85
+        ]
+      ],
+      "LowerLeg.L": [
+        [
+          "side",
+          -85
+        ]
+      ],
+      "LowerLeg.R": [
+        [
+          "side",
+          -85
+        ]
+      ],
+      "UpperArm.L": [
+        [
+          "fwd",
+          -70
+        ],
+        [
+          "side",
+          15
+        ]
+      ],
+      "UpperArm.R": [
+        [
+          "fwd",
+          70
+        ],
+        [
+          "side",
+          45
+        ]
+      ],
+      "LowerArm.L": [
+        [
+          "side",
+          55
+        ]
+      ],
+      "LowerArm.R": [
+        [
+          "side",
+          40
+        ]
+      ]
+    },
+    "face": {
+      "anchorUp": 0.1,
+      "mouthFwd": 0.13,
+      "mouthUp": 0.035,
+      "mouthSide": -0.015,
+      "mouthR": 0.016
+    }
+  }
+]
