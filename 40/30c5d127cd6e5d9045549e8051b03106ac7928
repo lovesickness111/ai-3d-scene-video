@@ -1,0 +1,14 @@
+README.md
+  h_0287b4c3380af8 17-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "4030c5d127cd6e5d9045549e8051b03106ac7928",
+  "prompts": {},
+  "humans": {
+    "h_0287b4c3380af8": {
+      "author": "nvcuong1 <nvcuong1@software.misa.com.vn>"
+    }
+  }
+}
