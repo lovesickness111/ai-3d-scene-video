@@ -1,0 +1,153 @@
+.claude/skills/blender-3d-video/SKILL.md
+  h_0287b4c3380af8 1-96
+  h_0287b4c3380af8 97-113
+.claude/skills/blender-3d-video/references/assets.md
+  h_0287b4c3380af8 1-87
+.claude/skills/blender-3d-video/references/bpy-gotchas.md
+  h_0287b4c3380af8 1-73
+.claude/skills/blender-3d-video/references/characters.md
+  h_0287b4c3380af8 1-80
+.claude/skills/blender-3d-video/references/dialogue-video.md
+  h_0287b4c3380af8 1-90
+.claude/skills/blender-3d-video/references/pipeline.md
+  h_0287b4c3380af8 1-89
+.claude/skills/blender-3d-video/references/tts.md
+  h_0287b4c3380af8 1-52
+.claude/skills/blender-3d-video/scripts/fetch_assets.py
+  h_0287b4c3380af8 1-120
+.claude/skills/blender-3d-video/scripts/glb_lib.py
+  h_0287b4c3380af8 1-151
+.claude/skills/blender-3d-video/scripts/glb_lineup.py
+  h_0287b4c3380af8 1-115
+.claude/skills/blender-3d-video/scripts/make_video.py
+  h_0287b4c3380af8 1-65
+.claude/skills/blender-3d-video/scripts/render.py
+  h_0287b4c3380af8 1-37
+.claude/skills/blender-3d-video/scripts/scene_lib.py
+  h_0287b4c3380af8 1-352
+.claude/skills/blender-3d-video/scripts/scene_template.py
+  h_0287b4c3380af8 1-122
+.claude/skills/blender-3d-video/scripts/sheet.py
+  h_0287b4c3380af8 1-43
+.claude/skills/threejs-3d-video/SKILL.md
+  h_0287b4c3380af8 1-97
+.claude/skills/threejs-3d-video/references/assets.md
+  h_0287b4c3380af8 1-78
+.claude/skills/threejs-3d-video/references/characters.md
+  h_0287b4c3380af8 1-47
+.claude/skills/threejs-3d-video/references/pipeline.md
+  h_0287b4c3380af8 1-75
+.claude/skills/threejs-3d-video/references/threejs-gotchas.md
+  h_0287b4c3380af8 1-70
+.claude/skills/threejs-3d-video/references/thumbnail.md
+  h_0287b4c3380af8 1-66
+.claude/skills/threejs-3d-video/templates/assets/dev_casual.json
+  h_0287b4c3380af8 1-94
+.claude/skills/threejs-3d-video/templates/assets/test_assets.json
+  h_0287b4c3380af8 1-63
+.claude/skills/threejs-3d-video/templates/fetch_assets.py
+  h_0287b4c3380af8 1-130
+.claude/skills/threejs-3d-video/templates/index.html
+  h_0287b4c3380af8 1-188
+.claude/skills/threejs-3d-video/templates/package.json
+  h_0287b4c3380af8 1-15
+.claude/skills/threejs-3d-video/templates/scene.js
+  h_0287b4c3380af8 1-699
+.claude/skills/threejs-3d-video/templates/sheet.py
+  h_0287b4c3380af8 1-43
+.claude/skills/threejs-3d-video/templates/shoot.mjs
+  h_0287b4c3380af8 1-120
+.claude/skills/web-search/SKILL.md
+  h_0287b4c3380af8 1-43
+.claude/skills/web-search/search.py
+  h_0287b4c3380af8 1-101
+.gitignore
+  h_0287b4c3380af8 1-22
+README.md
+  h_0287b4c3380af8 1-50
+accent_check.py
+  h_0287b4c3380af8 1-73
+compose.py
+  h_0287b4c3380af8 1-451
+conversation.json
+  h_0287b4c3380af8 1-79
+conversation_decision_apps.json
+  h_0287b4c3380af8 1-70
+conversation_full.json
+  h_0287b4c3380af8 1-130
+conversation_lessons_1.json
+  h_0287b4c3380af8 1-74
+conversation_lessons_2.json
+  h_0287b4c3380af8 1-74
+depth.py
+  h_0287b4c3380af8 1-33
+experiments/threejs/assets/LICENSE_kaykit.txt
+  h_0287b4c3380af8 1-33
+experiments/threejs/assets/casual_test.json
+  h_0287b4c3380af8 1-4
+experiments/threejs/assets/dev_casual.json
+  h_0287b4c3380af8 1-94
+experiments/threejs/assets/test_assets.json
+  h_0287b4c3380af8 1-63
+experiments/threejs/assets/ubc/License_Standard.txt
+  h_0287b4c3380af8 1-22
+experiments/threejs/assets/ubc_test.json
+  h_0287b4c3380af8 1-4
+experiments/threejs/index.html
+  h_0287b4c3380af8 1-268
+experiments/threejs/package-lock.json
+  h_0287b4c3380af8 1-490
+experiments/threejs/package.json
+  h_0287b4c3380af8 1-15
+experiments/threejs/scene.js
+  h_0287b4c3380af8 1-701
+experiments/threejs/shoot.mjs
+  h_0287b4c3380af8 1-120
+make_video.py
+  h_0287b4c3380af8 1-65
+pronunciation.json
+  h_0287b4c3380af8 1-92
+render.py
+  h_0287b4c3380af8 1-37
+requirements.txt
+  h_0287b4c3380af8 1-10
+respeak_check.py
+  h_0287b4c3380af8 1-59
+scripts/_scene_lib.py
+  h_0287b4c3380af8 1-348
+scripts/character_kit.py
+  h_0287b4c3380af8 1-115
+scripts/demo_head_knock.py
+  h_0287b4c3380af8 1-131
+scripts/demo_programmer_mascot.py
+  h_0287b4c3380af8 1-262
+scripts/kaykit_knock.py
+  h_0287b4c3380af8 1-173
+scripts/kaykit_lineup.py
+  h_0287b4c3380af8 1-167
+scripts/photo_cartoon_scene.py
+  h_0287b4c3380af8 1-354
+scripts/photo_parallax.py
+  h_0287b4c3380af8 1-163
+scripts/props_lineup.py
+  h_0287b4c3380af8 1-111
+scripts/qa_scene.py
+  h_0287b4c3380af8 1-325
+sheet.py
+  h_0287b4c3380af8 1-43
+tts.py
+  h_0287b4c3380af8 1-323
+voice_remix.py
+  h_0287b4c3380af8 1-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "e9f489914d4d9a1bf0f9e40cf012447bc0970c9f",
+  "prompts": {},
+  "humans": {
+    "h_0287b4c3380af8": {
+      "author": "nvcuong1 <nvcuong1@software.misa.com.vn>"
+    }
+  }
+}
