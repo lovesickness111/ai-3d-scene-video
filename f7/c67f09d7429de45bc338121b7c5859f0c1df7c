@@ -1,0 +1,80 @@
+.claude/skills/blender-3d-video/references/tts.md
+  h_0287b4c3380af8 33-48
+.claude/skills/threejs-3d-video/SKILL.md
+  h_0287b4c3380af8 16,42-43,52,57-60,68
+.claude/skills/threejs-3d-video/references/assets.md
+  h_0287b4c3380af8 56-57,61
+.claude/skills/threejs-3d-video/references/characters.md
+  h_0287b4c3380af8 11-34,37-39,46-77
+.claude/skills/threejs-3d-video/templates/assets/boss_suit.json
+  h_0287b4c3380af8 1-77
+.claude/skills/threejs-3d-video/templates/assets/dev_casual.json
+  h_0287b4c3380af8 8-9,12,25-26,53,55-56,62-116,119
+.claude/skills/threejs-3d-video/templates/index.html
+  h_0287b4c3380af8 53,180-270
+.claude/skills/threejs-3d-video/templates/scene.js
+  h_0287b4c3380af8 276-296,360-367,373-374,425-429,449-451,465-516,524,531-535,552-556,558,635,641-644,698-705,754,758,772-773,784-789
+.claude/skills/threejs-3d-video/templates/shoot.mjs
+  h_0287b4c3380af8 100-107
+.claude/skills/viet-nhu-nguoi/LICENSE
+  h_0287b4c3380af8 1-21
+.claude/skills/viet-nhu-nguoi/LICENSE-humanizer
+  h_0287b4c3380af8 1-21
+.claude/skills/viet-nhu-nguoi/SKILL.md
+  h_0287b4c3380af8 1-205
+.claude/skills/viet-nhu-nguoi/references/chat.md
+  h_0287b4c3380af8 1-159
+.claude/skills/viet-nhu-nguoi/references/patterns.md
+  h_0287b4c3380af8 1-517
+.claude/skills/viet-nhu-nguoi/references/slides.md
+  h_0287b4c3380af8 1-93
+.claude/skills/viet-nhu-nguoi/references/sources.md
+  h_0287b4c3380af8 1-78
+.claude/skills/viet-nhu-nguoi/scripts/check_facts.py
+  h_0287b4c3380af8 1-73
+.claude/skills/viet-nhu-nguoi/scripts/scan.py
+  h_0287b4c3380af8 1-667
+.claude/skills/viet-nhu-nguoi/scripts/slides.py
+  h_0287b4c3380af8 1-125
+.gitignore
+  h_0287b4c3380af8 19-22
+README.md
+  h_0287b4c3380af8 14,60,78-79
+accent_check.py
+  h_0287b4c3380af8 8-9
+conversation_lessons_1.json
+  h_0287b4c3380af8 8,12,17,21,25,29,33,38,42,50,54,59,63,67
+conversation_lessons_2.json
+  h_0287b4c3380af8 8,57-69
+experiments/threejs/assets/boss_suit.json
+  h_0287b4c3380af8 1-77
+experiments/threejs/assets/dev_casual.json
+  h_0287b4c3380af8 8-9,12,25-26,53,55-56,62-116,119
+experiments/threejs/assets/quaternius/LICENSES.md
+  h_0287b4c3380af8 1-113
+experiments/threejs/index.html
+  h_0287b4c3380af8 53,218,227,252-261
+experiments/threejs/scene.js
+  h_0287b4c3380af8 276-296,360-367,373-374,425-429,449-451,465-516,524,531-535,552-556,558,635,641-644,698-705,754,758,784-789
+experiments/threejs/shoot.mjs
+  h_0287b4c3380af8 100-107
+pronunciation.json
+  h_0287b4c3380af8 91-92
+reading_check.py
+  h_0287b4c3380af8 1-113
+respeak_check.py
+  h_0287b4c3380af8 1-2,4-7,18-19,31,33-35,39-46,56
+tts.py
+  h_0287b4c3380af8 82-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "f7c67f09d7429de45bc338121b7c5859f0c1df7c",
+  "prompts": {},
+  "humans": {
+    "h_0287b4c3380af8": {
+      "author": "nvcuong1 <nvcuong1@software.misa.com.vn>"
+    }
+  }
+}
