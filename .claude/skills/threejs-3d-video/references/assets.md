@@ -53,10 +53,12 @@ GitHub API không token (60 req/giờ). File `.gltf` cần `.bin` + texture cạ
 | `asIs` | giữ nguyên gốc/scale của file — **bắt buộc khi nhiều file ghép một nhân vật** (thân + tóc) |
 | `offset` | dịch thêm (Blender) sau khi đặt — hạ nhân vật ngồi xuống ghế (−0,42) |
 | `pose` | `{xương: [x,y,z]}` cộng độ vào góc cục bộ, hoặc `{xương: [["side"\|"fwd"\|"up", độ], ...]}` xoay quanh **trục thế giới của nhân vật** (phải/trước/lên), áp theo thứ tự, cha trước con — dùng cái này cho gối/vai, trục cục bộ của xương không đoán được |
+| `ik` | `{xươngBànTay: {to: [phải, trước, cao] \| at: [x, y, z phòng], pole, fingers \| fingersTo, finger, thumb, thumbTo}}`: IK hai đoạn đặt cổ tay vào điểm (`to` tính từ chân theo trục nhân vật, `at` theo tọa độ phòng Blender, vd. trên laptop), khuỷu chĩa theo `pole`. Sau đó `finger` (vd. `Index2.R`) được hướng tới `fingers`/`fingersTo`, rồi bàn tay xoay quanh trục đó cho `thumb` chĩa theo `thumbTo`: ngón cái vào trong là lòng bàn tay úp xuống. Chạy sau `pose`. Dùng khi tay phải chạm đúng chỗ, vì góc khớp hai tay không đối xứng. `"ikDebug": true` in vai, chiều dài xương, khoảng cách: đích quá tầm với thì tay duỗi thẳng |
+| `after` | như `pose` dạng trục thế giới, áp **sau** `ik` (xoay cổ tay, ngón) |
 | `clip` | tên animation trong file (hoặc trong `animations`) chạy theo `mixer.setTime(f/fps)` |
 | `animations` | glb khác cung cấp clip (cùng tên xương); `retarget: true` thử `SkeletonUtils.retargetClip` — **thất bại** với UAL→Quaternius (nhân vật co thành chấm), để lại cho sau |
 | `bodyOnly` (mặc định true khi có SkinnedMesh) | ẩn mesh không rig — KayKit rải 25 vũ khí quanh nhân vật, mũ giáp cũng rời nên bị ẩn theo |
-| `replaceDev`, `role: "dev"`, `face` | ẩn dev dựng code (giữ ghế), dựng neo đầu, gắn miệng, chuyển cử chỉ sang xương — xem `characters.md` |
+| `replaceDev`, `role`, `face` | `role` ("dev", "boss"…) dựng neo đầu tĩnh cho camera/bong bóng và gắn miệng theo hướng đầu; `replaceDev` ẩn dev dựng code (ghế dời theo `loc/yaw`), chuyển cử chỉ sang xương — xem `characters.md` |
 
 ## Bẫy GLTFLoader / rig
 

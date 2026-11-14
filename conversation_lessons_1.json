@@ -5,41 +5,41 @@
   },
   {
     "speaker": "claude",
-    "text": "Không, tao không mở GUI nào cả. Tao ngồi trong **CLI**, viết **code** mô tả cảnh — phòng, bàn, đèn, camera — rồi gọi Blender hoặc three.js chạy **headless**, render xong trả về ảnh. Đây, mày nhìn lên hình này nha."
+    "text": "Chả mở gì cả. Tao ngồi trong **CLI** viết **code** tả cảnh, phòng ở đâu, bàn ở đâu, đèn chiếu thế nào. Xong gọi Blender hoặc three.js chạy ngầm, dân trong nghề gọi là **headless**, render ra ảnh cho tao xem. Mày nhìn lên đây nha."
   },
   {
     "speaker": "claude",
-    "text": "Vòng lặp của tao có 4 bước: **viết code → render thử vài frame → xem ảnh → sửa code**. Vì cả cảnh nằm trong code nên chạy lại là ra **đúng y** ảnh cũ, đổi một tham số là đổi một chi tiết, và mọi thay đổi đều là một **commit** mày xem lại được.",
+    "text": "Cứ thế lặp: viết code, **render thử vài frame**, xem ảnh, sai đâu sửa đấy rồi chạy lại, mỗi vòng vài chục giây. Cảnh nằm hết trong code nên chạy lại bao nhiêu lần cũng ra đúng ảnh đấy. Sửa chỗ nào thì **commit** chỗ đó, mày muốn xem lại lúc nào cũng được.",
     "illustration": "loop"
   },
   {
     "speaker": "dev",
-    "text": "Tức là lúc dựng mày không nhìn thấy cảnh, chỉ nhìn ảnh render ra?"
+    "text": "Thế là mày dựng mù à? Chỉ nhìn được ảnh chụp ra thôi?"
   },
   {
     "speaker": "claude",
-    "text": "Đúng. Giống đạo diễn **bịt mắt** chỉ đạo qua điện thoại: dặn xong bảo máy chụp thử, nhìn ảnh, dặn lại. Khác là mỗi vòng của tao chỉ vài chục giây."
+    "text": "Ừ, mù một nửa. Như ông đạo diễn ngồi nhà gọi điện chỉ đạo, dặn quay thử, chờ gửi ảnh về, xem xong lại dặn tiếp. Được cái tao gọi bao nhiêu cuộc cũng không kêu."
   },
   {
     "speaker": "dev",
-    "text": "Mà render bằng gì? Blender hay three.js?"
+    "text": "Thế render bằng Blender hay three.js?"
   },
   {
     "speaker": "claude",
-    "text": "Hai engine, hai tính cách. Đây, mày nhìn lên bảng này nha."
+    "text": "Cả hai, mỗi cái một kiểu. Mày nhìn bảng này cho dễ."
   },
   {
     "speaker": "claude",
-    "text": "**Blender** với Cycles như xưởng phim: ánh sáng mềm, bóng đẹp, nhưng mỗi frame chờ **30 giây**. **Three.js** chạy trong Chrome headless như game engine: mỗi frame **nửa giây**, chữ là HTML nên sắc nét, đổi lại ánh sáng phẳng hơn. Video explainer, nói chuyện: three.js. Key visual cần đẹp từng vệt sáng: Blender.",
+    "text": "Hồi đầu tao dựng bằng **Blender**. Ảnh đẹp thật, ánh sáng mềm, mà mỗi frame chờ **30 giây**, video ba phút là ngồi đợi mười mấy tiếng. Sang **three.js** chạy trong Chrome thì **nửa giây** một frame. Ánh sáng có phẳng hơn tí, nhưng video ngồi nói chuyện thế này thì chả ai soi.",
     "illustration": "compare"
   },
   {
     "speaker": "dev",
-    "text": "Chênh 60 lần! Thế dùng cái nhanh thôi?"
+    "text": "Chênh nhau 60 lần! Thế bỏ hẳn Blender đi cho xong?"
   },
   {
     "speaker": "claude",
-    "text": "Mẹo là dùng **cả hai theo thứ tự**: phác bố cục bằng three.js, chốt xong, cần đẹp thì bê nguyên tọa độ, màu, góc camera sang Blender. Cùng một bộ số, hai cái engine."
+    "text": "Chưa bỏ được. Tao phác bằng three.js cho nhanh, ưng bố cục rồi, cảnh nào cần đẹp thì bê nguyên tọa độ, màu, góc máy sang **Blender** render lại."
   },
   {
     "speaker": "dev",
@@ -47,24 +47,24 @@
   },
   {
     "speaker": "claude",
-    "text": "Tao **không có tai**, nên không tự đọc mà cũng không tự nghe được. Đây, mày nhìn lên nha."
+    "text": "Tao chỉ viết được chữ thôi. Đọc với nghe là việc của mấy model khác, mày xem đội của tao này."
   },
   {
     "speaker": "claude",
-    "text": "Giọng để **Gemini TTS** đọc, rồi nhờ **Gemini audio** chấm từng clip xem giọng Bắc hay Nam, câu nào lệch thì đọc lại. Tao giữ việc **nghĩ và nhìn** — viết code, đọc ảnh render, quyết bố cục — chạy bằng **Claude Opus 5.5**, hoặc **Fable 5.1** khi cần mạnh nhất. Việc lặp hàng loạt giao **Claude Haiku 5.5**, rẻ hơn Opus cỡ bốn mươi lần. Một **đội model**, không phải một mình.",
+    "text": "**Gemini TTS** đọc giọng, xong nhờ **Gemini audio** nghe lại xem có ra giọng Bắc không, câu nào lơ lớ là bắt đọc lại. Viết code với xem ảnh render thì tao làm, chạy bằng **Claude Opus 5.5**, ca nào khó quá thì gọi **Fable 5.1**. Còn mấy việc lặp đi lặp lại thì giao **Claude Haiku 5.5**, rẻ hơn Opus cỡ bốn mươi lần.",
     "illustration": "team"
   },
   {
     "speaker": "dev",
-    "text": "Nghe ngon. Nhưng tao thấy nhiều người than dựng kiểu này đốt tiền render lắm?"
+    "text": "Nghe ngon. Nhưng tao thấy nhiều người than dựng kiểu này đốt tiền lắm?"
   },
   {
     "speaker": "claude",
-    "text": "Đốt là do làm sai thứ tự. Tao có **6 best practice** để không đốt, nhưng dài, để clip sau."
+    "text": "Đốt là vì làm ngược thứ tự thôi. Tao có hẳn **8 best practice** cho vụ này, mà kể ra thì dài, để clip sau."
   },
   {
     "speaker": "dev",
-    "text": "Ok. Vậy bà con **like với follow Dev xịn** để không lỡ clip sau nha.",
+    "text": "Ok. Thế mọi người **like với follow Dev xịn** đi, không lại lỡ clip sau.",
     "illustration": "cta"
   },
   {

@@ -79,9 +79,12 @@ def load_env(path=ROOT/'.env'):
 
 
 def load_pronunciation(path):
-    table = {k.lower(): v for k, v in json.loads(path.read_text(encoding='utf-8')).items()}
-    longest_first = sorted(table, key=len, reverse=True)  # "Decision API" before "Decision"
-    pattern = re.compile(r'(?<!\w)(' + '|'.join(re.escape(k) for k in longest_first) + r')(?!\w)', re.IGNORECASE)
+    raw = json.loads(path.read_text(encoding='utf-8'))
+    table = {k.lower(): v for k, v in raw.items()}
+    longest_first = sorted(raw, key=len, reverse=True)  # "Decision API" before "Decision"
+    # acronyms match only in capitals: "AI" must not rewrite the Vietnamese "ai" (who)
+    pattern = re.compile(r'(?<!\w)(' + '|'.join(re.escape(k) if k.isupper() else f'(?i:{re.escape(k)})'
+                                                for k in longest_first) + r')(?!\w)')
     return table, pattern
 
 

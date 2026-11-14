@@ -97,12 +97,15 @@ if (args.title) {  // --title [json opts]: the title card (characters on the 2D 
   console.log('wrote', path.join(out, 'thumbnail.png'));
   process.exit(0);
 }
-if (args.still) {  // --still wide: one still of a named shot into <out>/still_<shot>.png, nothing else
-  const f = +(args.frame ?? 1), name = `still_${args.still}${args.frame ? '_' + f : ''}.png`;
-  await page.evaluate(([s, f]) => window.renderStill(s, f), [args.still, f]);
-  await page.screenshot({ path: path.join(out, name) });
+if (args.still) {  // --still wide[,dev_side...]: one still per named shot into <out>/still_<shot>.png, nothing else
+  const f = +(args.frame ?? 1);
+  for (const shot of String(args.still).split(',')) {
+    const name = `still_${shot}${args.frame ? '_' + f : ''}.png`;
+    await page.evaluate(([s, f, l]) => window.renderStill(s, f, l), [shot, f, +(args.look ?? 0)]);  // --look 1: the dev faces the boss
+    await page.screenshot({ path: path.join(out, name) });
+    console.log('wrote', path.join(out, name));
+  }
   await browser.close();
-  console.log('wrote', path.join(out, name));
   process.exit(0);
 }
 const started = Date.now();

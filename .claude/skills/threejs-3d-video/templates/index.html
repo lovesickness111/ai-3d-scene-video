@@ -50,7 +50,7 @@
       radial-gradient(circle at 92% 14%, #21335c 0 90px, transparent 91px),
       linear-gradient(135deg, #f6f1ea 0%, #e9eef0 100%);
     opacity: .92; }
-  #title { display: none; position: absolute; left: 660px; top: 130px; width: 590px; color: #262a33; }
+  #title { display: none; position: absolute; left: 660px; top: 200px; width: 590px; color: #262a33; }
   #title h1 { margin: 0; font-size: 54px; line-height: 1.12; font-weight: 800; letter-spacing: -.5px; }
   #title h1 em { font-style: normal; color: #c95e34; }
   #title .sub { margin-top: 26px; font-size: 28px; color: #4f5560; }
@@ -177,6 +177,97 @@
     <div style="margin-top:40px"><span class="pill solid">Kết luận: Claude hài hơn</span></div>
     <div class="muted" style="font-size:17px;margin-top:14px">Chấm bởi Decision Model trong 92 ms. Không chịu trách nhiệm về cảm xúc.</div>
   </div>
+
+  <div class="card" id="card-loop">
+    <div class="bar"></div><h2>Vòng lặp của agent</h2>
+    <div style="display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;align-items:center;height:150px;margin-top:10px">
+      <div class="node" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">⌨️</span>Viết code</div><div class="arrow">➜</div>
+      <div class="node" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">🎬</span>Render thử<br>vài frame</div><div class="arrow">➜</div>
+      <div class="node" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">👀</span>Xem ảnh</div><div class="arrow">➜</div>
+      <div class="node model" style="height:100%;flex-direction:column;gap:8px"><span style="font-size:34px">✏️</span>Sửa code</div>
+    </div>
+    <div class="muted" style="margin-top:28px;font-size:19px;text-align:center">↺ vài chục giây một vòng · chạy lại ra đúng y · mỗi thay đổi là một commit</div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px"><span class="pill">CLI</span><span class="pill">headless</span><span class="pill">không GUI</span></div>
+  </div>
+
+  <div class="card" id="card-compare">
+    <div class="bar"></div><h2>Blender hay three.js?</h2>
+    <div style="display:grid;grid-template-columns:150px 1fr 1fr;row-gap:12px;column-gap:14px;align-items:center;font-size:19px">
+      <div></div><div style="font-weight:700;font-size:22px">Blender (Cycles)</div><div style="font-weight:700;font-size:22px;color:var(--accent)">three.js</div>
+      <div style="grid-column:1/-1;border-top:2px solid #e8e4dd"></div>
+      <div class="muted">Giống gì</div><div>Xưởng phim</div><div>Game engine trong Chrome</div>
+      <div class="muted">Một frame</div><div><b>30 giây</b></div><div><b>0,5 giây</b></div>
+      <div class="muted">Ánh sáng</div><div>Mềm, bóng đẹp</div><div>Phẳng hơn</div>
+      <div class="muted">Chữ</div><div>Vẽ sau bằng Pillow</div><div>HTML, sắc nét</div>
+      <div class="muted">Hợp với</div><div>Key visual, ảnh đẹp</div><div>Video explainer, nói chuyện</div>
+    </div>
+    <div style="margin-top:22px"><span class="pill">Phác bằng three.js → chốt → bê số đo sang Blender nếu cần đẹp</span></div>
+  </div>
+
+  <div class="card" id="card-team">
+    <div class="bar"></div><h2>Một đội model, không phải một mình</h2>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="tile"><div style="font-size:34px">🧠👀</div><h3>Nghĩ và nhìn</h3><div class="muted" style="font-size:16px">viết code · đọc ảnh render · quyết bố cục</div><span class="pill" style="margin-top:10px">Claude Opus 5.5 · Fable 5.1</span></div>
+      <div class="tile"><div style="font-size:34px">🗣️👂</div><h3>Đọc và nghe</h3><div class="muted" style="font-size:16px">đọc giọng Bắc · chấm accent từng clip</div><span class="pill" style="margin-top:10px">Gemini TTS · Gemini audio</span></div>
+      <div class="tile"><div style="font-size:34px">🔁</div><h3>Lặp hàng loạt</h3><div class="muted" style="font-size:16px">soát khung hình · phân loại · có/không</div><span class="pill" style="margin-top:10px">Claude Haiku 5.5 (rẻ ~40×)</span></div>
+    </div>
+    <div class="muted" style="margin-top:22px;font-size:18px">Việc cần suy nghĩ → model mạnh. Việc lặp hàng loạt → model rẻ. Việc nghe → model biết nghe.</div>
+  </div>
+
+  <div class="card" id="card-rules">
+    <div class="bar"></div><h2>8 best practice</h2>
+    <div class="rows" style="row-gap:12px;font-size:20px">
+      <div><b style="color:var(--accent)">1</b>&nbsp; Render thử trước, render full sau</div>
+      <div><b style="color:var(--accent)">2</b>&nbsp; Báo chi phí trước khi chạy — "49 frame, 25 phút"</div>
+      <div><b style="color:var(--accent)">3</b>&nbsp; TTS trước, dựng hình sau</div>
+      <div><b style="color:var(--accent)">4</b>&nbsp; Chữ và bảng số để layer riêng</div>
+      <div><b style="color:var(--accent)">5</b>&nbsp; Góp ý ghi thành rule trong file skill</div>
+      <div class="muted"><b>6</b>&nbsp; …</div>
+      <div class="muted"><b>7</b>&nbsp; …</div>
+      <div class="muted"><b>8</b>&nbsp; …</div>
+    </div>
+  </div>
+
+  <div class="card" id="card-packs">
+    <div class="bar"></div><h2>Tải pack model miễn phí, đừng tự dựng</h2>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="tile"><div style="font-size:34px">🧍</div><h3>Nhân vật</h3><div class="muted" style="font-size:16px">có sẵn animation đi, ngồi, vẫy tay</div></div>
+      <div class="tile"><div style="font-size:34px">🪑🚗🌳</div><h3>Nội thất, xe, cây</h3><div class="muted" style="font-size:16px">hàng nghìn file GLB</div></div>
+      <div class="tile"><div style="font-size:34px">🔍</div><h3>Kiểm trước khi dùng</h3><div class="muted" style="font-size:16px">license (CC0?) · tỉ lệ (chibi vs người thật)</div></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:22px;align-items:center"><span class="muted" style="font-size:18px">Nguồn:</span><span class="pill">Kenney</span><span class="pill">KayKit</span><span class="pill">Quaternius</span></div>
+  </div>
+
+  <div class="card" id="card-tokens">
+    <div class="bar"></div><h2>Tiết kiệm token của chính agent</h2>
+    <div class="rows" style="row-gap:14px;font-size:20px;margin-top:6px">
+      <div>🖼️&nbsp; <b>Ảnh ngốn token nhất</b> → ghép 12 khung thành 1 contact sheet, đọc 1 lần</div>
+      <div>🔍&nbsp; Render thử ở <b>độ phân giải thấp</b></div>
+      <div>📜&nbsp; Log dài → <b>lọc dòng lỗi</b>, không đọc cả nghìn dòng</div>
+      <div>🔁&nbsp; Việc lặp hàng loạt → <b>model nhỏ</b> (Haiku rẻ hơn Opus ~40×)</div>
+      <div>📒&nbsp; Rule ghi vào <b>skill</b> → phiên sau không mò lại</div>
+    </div>
+  </div>
+
+  <div class="card" id="card-models">
+    <div class="bar"></div><h2>Đúng model, đúng việc</h2>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="tile"><div style="font-size:34px">🧠</div><h3>Model xịn</h3><span class="pill" style="margin-top:6px">Opus 5.5 · Fable 5.1</span><div class="muted" style="font-size:16px;margin-top:10px">cần <b>nghĩ</b>: viết kịch bản · thiết kế cảnh, thẻ mới · debug · dò pose</div></div>
+      <div class="tile"><div style="font-size:34px">⚙️</div><h3>Model vừa</h3><span class="pill" style="margin-top:6px">Sonnet 5.5</span><div class="muted" style="font-size:16px;margin-top:10px">chạy <b>theo quy trình</b> đã viết: TTS · render thử · ghép video · soát lỗi lộ rõ</div></div>
+      <div class="tile"><div style="font-size:34px">🔁</div><h3>Model nhỏ</h3><span class="pill" style="margin-top:6px">Haiku 5.5</span><div class="muted" style="font-size:16px;margin-top:10px">việc <b>lặp hàng loạt</b>: có/không · phân loại · soát nghìn khung</div></div>
+    </div>
+    <div class="muted" style="margin-top:22px;font-size:18px">Skill càng chi tiết → càng dùng được model rẻ. Hạ effort trước khi hạ model.</div>
+  </div>
+
+  <div class="card" id="card-cta" style="display:none;text-align:center">
+    <div class="bar" style="margin:0 auto 14px"></div><h2>Thấy hay thì…</h2>
+    <div style="display:flex;flex-direction:column;gap:22px;align-items:center;margin-top:40px">
+      <span class="pill solid" style="font-size:30px;height:76px;padding:0 36px">👍 Like</span>
+      <span class="pill solid" style="font-size:30px;height:76px;padding:0 36px;background:#3a68b0">➕ Follow Dev xịn</span>
+    </div>
+    <div class="muted" style="margin-top:34px;font-size:18px">để có tiền điện cho Claude render tiếp</div>
+  </div>
+
   <img id="title-mascot" src="assets/avatar_claude.png" alt="">
   <div id="title">
     <h1>Giải thích <em>Model quyết định</em> (Jev) và ứng dụng trong dựng Video</h1>

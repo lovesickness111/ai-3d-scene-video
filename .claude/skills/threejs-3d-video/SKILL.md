@@ -13,7 +13,7 @@ description: >-
 Cảnh được **viết bằng JavaScript** (three.js), chạy trong **Chrome headless** qua `playwright-core`, mỗi khung
 là `renderFrame(f)` — hàm thuần của số khung — rồi chụp màn hình trang. Phần chữ (bong bóng, thẻ minh họa)
 là **HTML/CSS** nằm trên canvas nên ảnh chụp đã có đủ, không cần bước ghép 2D. Giọng TTS và mux dùng chung
-tool Python của pipeline Blender (`tts.py`, `make_video.py`, `accent_check.py`).
+tool Python của pipeline Blender (`tts.py`, `make_video.py`, `reading_check.py`).
 
 So với Blender/Cycles (skill `blender-3d-video`): **nhanh gấp ~60 lần** (0,3–0,5 s/khung kể cả chụp, so
 với ~30 s), chữ/bảng là markup, model GLB nạp trực tiếp; đổi lại look phẳng hơn (không có ánh sáng dội),
@@ -39,7 +39,8 @@ project khác nằm trong `templates/` của skill này (copy sang `<project>/th
 6. **Model có sẵn ưu tiên hơn dựng tay cho người**; mascot dạng khối thì dựng bằng primitive. Mọi pack phải
    có file LICENSE đi kèm trong thư mục tải về; kiểm license thật, không tin bảng tổng hợp
    (Quaternius pack mới là QAL, pack cũ CC0).
-7. **Không nghe được audio** → `accent_check.py` cho mọi clip mới; **bí mật ở `.env`**; **không vượt
+7. **Không nghe được audio** → `respeak_check.py` (kiểm cách đọc: giọng Bắc, từ tiếng Anh đọc đúng và
+   nhất quán, không thiếu/thừa chữ; câu trượt thì tự đọc lại) cho mọi clip mới; **bí mật ở `.env`**; **không vượt
    firewall** (nhiều trang asset bị chặn → dùng mirror GitHub, xem `references/assets.md`).
 
 ## Cài máy mới
@@ -48,12 +49,15 @@ project khác nằm trong `templates/` của skill này (copy sang `<project>/th
 node >= 20 (đã dùng 22.14), npm            # bắt buộc
 Chrome hoặc Edge cài sẵn                     # playwright-core dùng channel 'chrome' (không tải browser riêng)
 ffmpeg trong PATH                            # mux
-python 3.11 + .venv (pillow numpy)           # tts.py, make_video.py, accent_check.py, sheet.py
+python 3.11 + .venv (pillow numpy)           # tts.py, make_video.py, reading_check.py, sheet.py
 mkdir threejs && cp -r <skill>/templates/* threejs/ && cd threejs && npm install   # three, esbuild, playwright-core
 python <skill>/templates/fetch_assets.py --list
 python <skill>/templates/fetch_assets.py quaternius_modular_men kenney_furniture --models threejs/assets
 ```
-`.gitignore`: `node_modules/`, `threejs/bundle.js`, `threejs/assets/**/*.glb` (model tải lại được), `output/`.
+`.gitignore`: `node_modules/`, `threejs/bundle.js`, `output/`, và các pack chỉ tải về thử rồi bỏ. Model video
+**đang dùng** (cùng file license của pack) và ảnh `avatar_*.png` thì commit: dùng chung, clone về chạy được
+ngay, không phụ thuộc mirror còn sống (Quaternius CC0 cho phép phát lại). Đừng dùng luật `assets/**/*.png`:
+nó chặn luôn ảnh avatar của thẻ tiêu đề.
 Mạng công ty: chỉ `github.com`/`raw.githubusercontent.com`/`api.github.com`/npm registry đi được.
 
 ## Quy trình chuẩn
@@ -61,7 +65,7 @@ Mạng công ty: chỉ `github.com`/`raw.githubusercontent.com`/`api.github.com`
 ```
 1. Kịch bản          conversation.json  [{speaker, text (**đậm**), illustration?}, ...]
 2. TTS               .venv/Scripts/python.exe tts.py conversation.json --out output/<run>        (giọng + cues)
-                     .venv/Scripts/python.exe accent_check.py output/<run>/audio/turn_*.wav     (câu mới)
+                     .venv/Scripts/python.exe respeak_check.py conversation.json output/<run>   (kiểm cách đọc, đọc lại câu trượt)
 3. Dựng/sửa cảnh     threejs/scene.js (3D) + threejs/index.html (thẻ HTML) ; npm run build
 4. Soát              node shoot.mjs --out ../output/<run> --conversation ../conversation.json --frames 40,250,900
                      node shoot.mjs ... --still wide --frame 1        ; sheet.py → Read

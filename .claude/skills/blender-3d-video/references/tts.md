@@ -30,13 +30,22 @@ Chữ trên màn hình vẫn là bản gốc; `syllables_read()` đếm số âm
 đoạn nói có tốc độ âm tiết/giây gần đều (DP, phạt .2 khi cắt không ở dấu câu), rồi trải từ đều trong đoạn.
 Tiếng Việt đơn âm tiết nên cách này khớp 46/49 khoảng lặng. `beats` = giây bắt đầu câu (dùng cho biểu cảm).
 
-## Kiểm accent (vì không nghe được)
+## Kiểm cách đọc (vì không nghe được)
 
-`accent_check.py <wav...>`: gửi clip cho `gemini-3.8-flash` và `gemini-3.1-pro-preview`, hỏi
-northern/central/southern/foreign + cues. Khớp tai người dùng ở mọi trường hợp đã biết. Quy trình: chạy cho
-**mọi** clip, câu nào một model bảo southern → xóa `turn_XX.wav` **và** file raw của nó trong `audio/raw/`
-(không thì chỉ chạy lại filter), `tts.py --turns i`, kiểm lại — lặp 1–4 lần là được. `accent_check.py
---transcribe` chép lại y nguyên những gì nghe được, dùng để kiểm số/từ tiếng Anh đọc có đúng không.
+Model TTS hay đọc từ tiếng Anh lúc thế này lúc thế khác, đọc sai hoặc bỏ chữ, còn giọng thì thỉnh thoảng
+trôi về giọng Nam. `reading_check.py conversation.json output/<run>` gửi từng clip cho `gemini-3.8-flash` và
+`gemini-3.1-pro-preview`, kèm câu kịch bản và cách phiên âm mong muốn của từng từ (lấy từ `pronunciation.json`;
+từ tiếng Anh chưa có trong bảng cũng được hỏi). Model trả về giọng miền, bản chép lại, mỗi từ nghe ra thế nào,
+và từ nào bị thiếu, thừa hay đọc sai. Câu **trượt** khi có model nghe ra giọng không phải Bắc, hoặc cả hai
+model cùng bắt một từ. Từ chỉ một model bắt thì để người dùng nghe lại. Cuối lượt in bảng "mỗi từ nghe ra thế
+nào ở từng câu" để bắt chỗ đọc không nhất quán, báo cáo đầy đủ ghi vào `audio/reading_check.json`.
+
+`respeak_check.py conversation.json output/<run>` chạy bước trên rồi tự đọc lại câu trượt, tối đa 4 lần:
+xóa `turn_XX.wav` **và** file raw trong `audio/raw/` (không thì chỉ chạy lại filter) rồi `tts.py --turns i`.
+Câu đọc lại 4 lần vẫn trượt thì thường là lỗi phiên âm hay kịch bản, phải sửa `pronunciation.json`.
+Bẫy đã gặp: từ khóa viết tắt (`AI`) khớp không phân biệt hoa thường thì ăn luôn chữ "ai" tiếng Việt
+("chả ai soi" thành "chả ây ai soi"), nên từ khóa in hoa chỉ khớp khi viết hoa. `accent_check.py
+[--transcribe]` giữ lại để hỏi nhanh một clip.
 
 ## Voice remix (Gemini)
 

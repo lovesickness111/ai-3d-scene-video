@@ -50,7 +50,7 @@
       radial-gradient(circle at 92% 14%, #21335c 0 90px, transparent 91px),
       linear-gradient(135deg, #f6f1ea 0%, #e9eef0 100%);
     opacity: .92; }
-  #title { display: none; position: absolute; left: 660px; top: 130px; width: 590px; color: #262a33; }
+  #title { display: none; position: absolute; left: 660px; top: 200px; width: 590px; color: #262a33; }
   #title h1 { margin: 0; font-size: 54px; line-height: 1.12; font-weight: 800; letter-spacing: -.5px; }
   #title h1 em { font-style: normal; color: #c95e34; }
   #title .sub { margin-top: 26px; font-size: 28px; color: #4f5560; }
@@ -215,7 +215,7 @@
   </div>
 
   <div class="card" id="card-rules">
-    <div class="bar"></div><h2>7 best practice</h2>
+    <div class="bar"></div><h2>8 best practice</h2>
     <div class="rows" style="row-gap:12px;font-size:20px">
       <div><b style="color:var(--accent)">1</b>&nbsp; Render thử trước, render full sau</div>
       <div><b style="color:var(--accent)">2</b>&nbsp; Báo chi phí trước khi chạy — "49 frame, 25 phút"</div>
@@ -224,6 +224,7 @@
       <div><b style="color:var(--accent)">5</b>&nbsp; Góp ý ghi thành rule trong file skill</div>
       <div class="muted"><b>6</b>&nbsp; …</div>
       <div class="muted"><b>7</b>&nbsp; …</div>
+      <div class="muted"><b>8</b>&nbsp; …</div>
     </div>
   </div>
 
@@ -246,6 +247,16 @@
       <div>🔁&nbsp; Việc lặp hàng loạt → <b>model nhỏ</b> (Haiku rẻ hơn Opus ~40×)</div>
       <div>📒&nbsp; Rule ghi vào <b>skill</b> → phiên sau không mò lại</div>
     </div>
+  </div>
+
+  <div class="card" id="card-models">
+    <div class="bar"></div><h2>Đúng model, đúng việc</h2>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="tile"><div style="font-size:34px">🧠</div><h3>Model xịn</h3><span class="pill" style="margin-top:6px">Opus 5.5 · Fable 5.1</span><div class="muted" style="font-size:16px;margin-top:10px">cần <b>nghĩ</b>: viết kịch bản · thiết kế cảnh, thẻ mới · debug · dò pose</div></div>
+      <div class="tile"><div style="font-size:34px">⚙️</div><h3>Model vừa</h3><span class="pill" style="margin-top:6px">Sonnet 5.5</span><div class="muted" style="font-size:16px;margin-top:10px">chạy <b>theo quy trình</b> đã viết: TTS · render thử · ghép video · soát lỗi lộ rõ</div></div>
+      <div class="tile"><div style="font-size:34px">🔁</div><h3>Model nhỏ</h3><span class="pill" style="margin-top:6px">Haiku 5.5</span><div class="muted" style="font-size:16px;margin-top:10px">việc <b>lặp hàng loạt</b>: có/không · phân loại · soát nghìn khung</div></div>
+    </div>
+    <div class="muted" style="margin-top:22px;font-size:18px">Skill càng chi tiết → càng dùng được model rẻ. Hạ effort trước khi hạ model.</div>
   </div>
 
   <div class="card" id="card-cta" style="display:none;text-align:center">

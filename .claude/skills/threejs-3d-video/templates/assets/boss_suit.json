@@ -1,0 +1,77 @@
+[
+  {
+    "file": "quaternius/ModularMen_Suit.glb",
+    "role": "boss",
+    "asIs": true,
+    "loc": [
+      -1.0,
+      -0.42,
+      0
+    ],
+    "yaw": 80,
+    "pose": {
+      "Head": [
+        -14,
+        0,
+        0
+      ]
+    },
+    "face": {
+      "anchorUp": 0.1,
+      "mouthFwd": 0.104,
+      "mouthUp": 0.03,
+      "mouthSide": -0.015,
+      "mouthR": 0.016
+    },
+    "ik": {
+      "Hand.R": {
+        "to": [
+          0.17,
+          0.08,
+          1.1
+        ],
+        "pole": [
+          2,
+          -1.5,
+          0
+        ],
+        "fingersTo": [
+          0.16,
+          0.1,
+          0.9700000000000001
+        ],
+        "finger": "Index2.R",
+        "thumb": "Thumb2.R",
+        "thumbTo": [
+          0,
+          1,
+          0
+        ]
+      },
+      "Hand.L": {
+        "to": [
+          -0.17,
+          0.08,
+          1.1
+        ],
+        "pole": [
+          -2,
+          -1.5,
+          0
+        ],
+        "fingersTo": [
+          -0.16,
+          0.1,
+          0.9700000000000001
+        ],
+        "finger": "Index2.L",
+        "thumb": "Thumb2.L",
+        "thumbTo": [
+          0,
+          1,
+          0
+        ]
+      }
+    }
+  }
+]

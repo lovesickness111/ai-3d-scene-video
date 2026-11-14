@@ -5,8 +5,8 @@ to check numbers and English words). Needs the same .env as tts.py.
 .venv/Scripts/python.exe accent_check.py output/qa_demo/audio/turn_*.wav
 .venv/Scripts/python.exe accent_check.py --transcribe output/voice_test/google_free_vi.wav
 
-A clip is only trusted when every model agrees on "northern"; re-speak the turn
-(delete its wav, `tts.py --turns i`) and check again otherwise.
+The pipeline step is reading_check.py (accent and how every word, English terms included, was
+read against the script); this file holds the request it uses and stays for quick one-off questions.
 """
 import argparse
 import base64

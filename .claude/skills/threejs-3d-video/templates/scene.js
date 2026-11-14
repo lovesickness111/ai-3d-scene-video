@@ -273,6 +273,27 @@ const SHOTS = {  // qa_scene.py SHOTS
                     bubble: { loc: [.04, -.02, .36], scale: 1.42 }, card: [.47, .1, .97, .82] },
   wide: { anchor: claude.face, camera: { offset: [-.4, .3, -.1], lens: 30, dist: 3.6, side: [1, -.9, .45], low: .02 },  // the whole corner, for stills
           bubble: { loc: [.13, -.02, .30], scale: 1.5 } },
+  dev_side: { anchor: dev.head, camera: { offset: [0, -.01, .15], lens: 32, dist: 1.5, side: [-1, .1, .25], low: -.12 },  // stills: hands on the keyboard
+              bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  dev_top: { anchor: dev.head, camera: { offset: [0, -.01, .15], lens: 30, dist: 1.2, side: [-.45, -.35, 1], low: -.2 },  // stills: over the shoulder, onto the keys
+             bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  // the boss (assets/boss_suit.json, role "boss"): anchored to his head at init; claude.face only holds the place
+  boss_talk: { anchor: claude.face, camera: { lens: 38, dist: 2.0, side: [.8, -.55, .25], low: -.04 },
+               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  boss_dev: { anchor: claude.face, camera: { lens: 30, dist: 2.8, side: [.7, -1, .35], low: -.12, aside: .12 },  // both of them at the desk
+              bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  boss_body: { anchor: claude.face, camera: { lens: 35, dist: 2.4, side: [.55, -.85, .1], low: -.32 },  // stills: the boss head to toe
+              bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  boss_hips: { anchor: claude.face, camera: { lens: 40, dist: 1.6, side: [.55, -.85, .05], low: -.42 },  // stills: the boss hands at his hips
+              bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  boss_hipsL: { anchor: claude.face, camera: { lens: 40, dist: 1.6, side: [.6, .8, .05], low: -.42 },  // stills: the boss hips from his left
+               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  boss_front: { anchor: claude.face, camera: { lens: 35, dist: 2.3, side: [.8, .55, .15], low: -.28 },  // stills: the boss from his front-left, arms readable
+               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  dev_hands: { anchor: dev.head, camera: { offset: [0, -.01, .15], lens: 40, dist: .9, side: [-.7, .5, .8], low: -.5 },  // stills: the hands on the keys
+               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  dev_face: { anchor: dev.head, camera: { offset: [0, -.01, .15], lens: 70, dist: .7, side: [-.14, .99, .05], low: -.1 },  // stills: the glued mouth, face on
+              bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
 };
 for (const shot of Object.values(SHOTS)) shot.bubbleObj = bubble(shot.bubble.loc, shot.bubble.scale, shot.anchor);
 
@@ -336,20 +357,23 @@ const posesOf = (who) => POSE[who === 'dev' && CHAR.dev.rigged ? 'dev_rigged' : 
 
 // Body language: idle breathing/sway for everyone; while speaking, gestures scaled by how loud
 // the voice is at that moment (`energy`). All sines of the frame number, so deterministic.
-function animateBodies(f, fps, energy, emph = {}) {
+// `look` 0..1 turns the dev from the mascot to the boss (neck and head share the ~130 degrees: turning the chest pulls the hands off the keys).
+function turnAboutUp(bone, radians) {  // rotate a bone about the world vertical, whatever its parents do
+  bone.parent.updateWorldMatrix(true, false);
+  const pw = bone.parent.getWorldQuaternion(new THREE.Quaternion());
+  const q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), radians);
+  bone.quaternion.premultiply(pw.clone().invert().multiply(q).multiply(pw));
+}
+function animateBodies(f, fps, energy, emph = {}, look = 0) {
   const s = (period, phase = 0) => Math.sin(TAU * f / (fps * period) + phase);
   const e = energy.dev, c = energy.claude;
   if (CHAR.dev.rigged) {
     const b = CHAR.dev.bones;
     for (const x of Object.values(b)) x.rotation.copy(x.userData.base);
-    b.Chest.rotation.x += .02 * s(3.2);
+    if (look > 0) for (const [bone, d] of [[b.Neck, 55], [b.Head, 75]]) turnAboutUp(bone, deg(d * look));
+    // hands rest still on the keyboard (the user's call): no arm or chest motion, the head carries the talking
     b.Head.rotation.x += .04 * s(2.1) * (.3 + e) + (emph.dev ? -.09 : 0);  // a nod opens each sentence
     b.Head.rotation.y += .06 * s(3.7) * (.3 + e);
-    b.UpperArmR.rotation.x += .1 * e * s(.9);          // the desk-side arm talks
-    b.UpperArmR.rotation.z += .04 * e * s(1.3, 1);
-    b.LowerArmR.rotation.x += .3 * e * s(.7, .5);
-    b.UpperArmL.rotation.x += .05 * e * s(1.1, 2) + .01 * s(2.6);  // the arm by the mascot barely moves
-    b.LowerArmL.rotation.x += .08 * e * s(.8, 1);
     b.LowerLegR.rotation.z += .08 * e * s(.5);
   } else {
   dev.hoodie.scale.y = 1 + .012 * s(3.2);
@@ -398,7 +422,11 @@ window.loadAssets = async function (spec) {
         });
       }
     }
-    if (a.replaceDev) dev.body.visible = false;
+    if (a.replaceDev) {  // the chair goes where the character sits
+      dev.body.visible = false;
+      dev.root.position.copy(v3(a.loc));
+      dev.root.rotation.y = deg(a.yaw || 0);
+    }
     const root = gltf.scene;
     let skinned = 0, hidden = 0;
     root.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; if (o.isSkinnedMesh) { skinned++; o.frustumCulled = false; } } });
@@ -418,6 +446,9 @@ window.loadAssets = async function (spec) {
     // pose: a still pose for a rig that has no fitting clip. {boneName: [x, y, z]} adds local degrees;
     // {boneName: [["side"|"fwd"|"up", degrees], ...]} rotates the bone about the character's own world axes
     // (right / facing / up), which is how one thinks about a knee or a shoulder; applied in order, parents first.
+    scene.updateMatrixWorld(true);
+    const head = root.getObjectByName('Head');
+    if (head) a.headRest = head.getWorldQuaternion(new THREE.Quaternion());  // so the glued mouth can follow the posed head
     const upW = new THREE.Vector3(0, 1, 0), fwdW = new THREE.Vector3(0, 0, 1).applyAxisAngle(upW, deg(a.yaw || 0));
     const AX = { up: upW, fwd: fwdW, side: new THREE.Vector3().crossVectors(fwdW, upW) };
     for (const [name, rot] of Object.entries(a.pose || {})) {
@@ -431,6 +462,58 @@ window.loadAssets = async function (spec) {
         bone.quaternion.premultiply(pw.clone().invert().multiply(q).multiply(pw));
       }
     }
+    // ik: {handBone: {to: [side, fwd, up], pole: [side, fwd, up]}} puts the wrist at a point given in metres from the
+    // character's feet (right / facing / up), the elbow bending towards `pole`: upper arm and forearm are aimed, so
+    // no guessing which way a rig's bones turn. Run after `pose`, so the shoulders and torso are where they will be.
+    const along = v => new THREE.Vector3().addScaledVector(AX.side, v[0]).addScaledVector(AX.fwd, v[1]).addScaledVector(AX.up, v[2]);
+    const wp = o => o.getWorldPosition(new THREE.Vector3());
+    const aim = (bone, child, target) => {  // turn bone so that child moves onto the line towards target
+      scene.updateMatrixWorld(true);
+      const p = wp(bone), q = new THREE.Quaternion().setFromUnitVectors(wp(child).sub(p).normalize(), target.clone().sub(p).normalize());
+      const pw = bone.parent.getWorldQuaternion(new THREE.Quaternion());
+      bone.quaternion.premultiply(pw.clone().invert().multiply(q).multiply(pw));
+    };
+    // `at` instead of `to`: the wrist point in room (Blender) coordinates, e.g. on the laptop. `fingers` (room point)
+    // aims the hand so its `finger` bone points there, then `thumb` turns it about that line until the thumb bone
+    // points along `thumbTo` (character axes): thumb inwards = palm down, whatever the rig's bone rolls are.
+    const byName = n => root.getObjectByName(n) || root.getObjectByName(n.replace(/\./g, ''));
+    for (const [name, { to, at, pole = [0, -1, 0], fingers, fingersTo, finger, thumb, thumbTo }] of Object.entries(a.ik || {})) {
+      const hand = byName(name);
+      if (!hand) { console.error('no bone', name); continue; }
+      const lower = hand.parent, upper = lower.parent;
+      scene.updateMatrixWorld(true);
+      const S = wp(upper), la = S.distanceTo(wp(lower)), lb = wp(lower).distanceTo(wp(hand));
+      const T = at ? v3(at) : wp(g).add(along(to));
+      const d = Math.min(S.distanceTo(T), la + lb - 1e-4), dir = T.clone().sub(S).normalize();
+      if (a.ikDebug) console.error('ik', name, 'shoulder', S.toArray().map(v => +v.toFixed(3)), 'la', la.toFixed(3), 'lb', lb.toFixed(3), 'dist', S.distanceTo(T).toFixed(3), 'feet', wp(g).toArray().map(v => +v.toFixed(3)));
+      const cosA = (la * la + d * d - lb * lb) / (2 * la * d), P = along(pole);
+      const bend = P.sub(dir.clone().multiplyScalar(P.dot(dir))).normalize();
+      const E = S.clone().addScaledVector(dir, la * cosA).addScaledVector(bend, la * Math.sqrt(Math.max(0, 1 - cosA * cosA)));
+      aim(upper, lower, E);
+      aim(lower, hand, T);
+      if ((fingers || fingersTo) && finger) {  // fingersTo: the same point in character axes from the feet
+        const F = fingers ? v3(fingers) : wp(g).add(along(fingersTo)), fb = byName(finger);
+        aim(hand, fb, F);
+        if (thumb && thumbTo) {
+          scene.updateMatrixWorld(true);
+          const W = wp(hand), axis = F.clone().sub(W).normalize();
+          const flat = v => v.sub(axis.clone().multiplyScalar(v.dot(axis))).normalize();
+          const t = flat(wp(byName(thumb)).sub(W)), want = flat(along(thumbTo));
+          const angle = Math.atan2(new THREE.Vector3().crossVectors(t, want).dot(axis), t.dot(want));
+          const pw = hand.parent.getWorldQuaternion(new THREE.Quaternion());
+          hand.quaternion.premultiply(pw.clone().invert().multiply(new THREE.Quaternion().setFromAxisAngle(axis, angle)).multiply(pw));
+        }
+      }
+    }
+    for (const [name, rot] of Object.entries(a.after || {})) {  // wrist/finger turns once the arm is placed, same form as pose
+      const bone = root.getObjectByName(name) || root.getObjectByName(name.replace(/\./g, ''));
+      if (!bone) { console.error('no bone', name); continue; }
+      for (const [axis, degrees] of rot) {
+        scene.updateMatrixWorld(true);
+        const pw = bone.parent.getWorldQuaternion(new THREE.Quaternion());
+        bone.quaternion.premultiply(pw.clone().invert().multiply(new THREE.Quaternion().setFromAxisAngle(AX[axis], deg(degrees))).multiply(pw));
+      }
+    }
     let mixer = null, clip = null;
     if (gltf.animations.length) {
       clip = THREE.AnimationClip.findByName(gltf.animations, a.clip) || gltf.animations[0];
@@ -438,18 +521,18 @@ window.loadAssets = async function (spec) {
       mixer.clipAction(clip).play();
     }
     assets.push({ mixer });
-    if (a.role === 'dev') riggedDev(root, g, a);
+    if (a.role) riggedCharacter(root, g, a);
     report.push({ file: a.url.split('/').pop(), size: size.toArray().map(v => +v.toFixed(2)), scale: +s.toFixed(3),
                   hidden, clip: clip && clip.name, clips: gltf.animations.map(c => c.name) });
   }
   return report;
 };
 
-// A ready-made rigged character takes the dev's seat: the built dev is hidden (chair stays), the
-// speech bubble and camera hang from a fixed anchor at the character's head, a small mouth mesh is
-// glued to the Head bone for lip-sync, and body language is layered on the seated pose by rotating
-// bones (procedural, like the built dev -- the library clips did not retarget cleanly onto this rig).
-function riggedDev(root, g, a) {
+// A ready-made rigged character with a speaking role (the dev takes the built dev's seat; others, like
+// the boss, just stand in the room): the speech bubble and camera hang from a fixed anchor at the
+// character's head, a small mouth mesh is glued to the Head bone for lip-sync, and body language is
+// layered on the pose by rotating bones (procedural -- the library clips did not retarget cleanly).
+function riggedCharacter(root, g, a) {
   const bone = n => root.getObjectByName(n) || root.getObjectByName(n.replace(/\./g, ''));
   const bones = Object.fromEntries(['Head', 'Neck', 'Chest', 'UpperArm.L', 'LowerArm.L', 'UpperArm.R', 'LowerArm.R', 'LowerLeg.L', 'LowerLeg.R']
     .map(n => [n.replace(/\./g, ''), bone(n)]));
@@ -466,10 +549,13 @@ function riggedDev(root, g, a) {
   mouth.scale.set(1.3, .5, .5);
   bones.Head.add(mouth);
   const side = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0));  // the character's right
-  mouth.position.copy(bones.Head.worldToLocal(headPos.clone().addScaledVector(fwd, face.mouthFwd ?? .09)
-    .addScaledVector(side, face.mouthSide ?? 0).add(new THREE.Vector3(0, face.mouthUp ?? .04, 0))));
+  // the mouth offset is measured on the unposed, upright head, then turned the way the pose turned the head
+  const turn = a.headRest ? bones.Head.getWorldQuaternion(new THREE.Quaternion()).multiply(a.headRest.clone().invert()) : new THREE.Quaternion();
+  const offset = new THREE.Vector3().addScaledVector(fwd, face.mouthFwd ?? .09).addScaledVector(side, face.mouthSide ?? 0)
+    .add(new THREE.Vector3(0, face.mouthUp ?? .04, 0)).applyQuaternion(turn);
+  mouth.position.copy(bones.Head.worldToLocal(headPos.clone().add(offset)));
   mouth.scale.divide(bones.Head.getWorldScale(new THREE.Vector3()));
-  CHAR.dev = { rigged: true, root: g, head: anchor, mouth: [mouth], eyes: [], brows: [], bones };
+  CHAR[a.role] = { rigged: true, root: g, head: anchor, mouth: [mouth], eyes: [], brows: [], bones, headRest: a.headRest };
 }
 
 // ---- timeline ----
@@ -546,11 +632,15 @@ function layoutTurn(turn) {
 window.init = function (timeline) {
   T = timeline;
   if (CHAR.dev.rigged) {  // the dev shots hang from the character's head anchor instead of the built head
-    for (const name of ['dev_talk', 'dev_explain']) {
+    for (const name of ['dev_talk', 'dev_explain', 'dev_side', 'dev_top', 'dev_hands', 'dev_face']) {
       SHOTS[name].anchor = CHAR.dev.head;
       SHOTS[name].camera.offset = [0, 0, 0];
       CHAR.dev.head.add(SHOTS[name].bubbleObj.root);
     }
+  }
+  if (CHAR.boss) for (const name of ['boss_talk', 'boss_dev', 'boss_body', 'boss_hips', 'boss_hipsL', 'boss_front']) {
+    SHOTS[name].anchor = CHAR.boss.head;
+    CHAR.boss.head.add(SHOTS[name].bubbleObj.root);
   }
   animateBodies(0, T.fps, { dev: 0, claude: 0 });
   for (const who of ['dev', 'claude']) for (const [part, objs] of Object.entries(parts(who))) for (const o of objs) pose(o, Object.values(posesOf(who)[part])[0]);
@@ -605,7 +695,14 @@ window.renderFrame = function (f) {
     }
   }
   for (const a of assets) if (a.mixer) a.mixer.setTime(f / fps);  // clip time from the frame number: deterministic
-  animateBodies(f, fps, energy, emphasis);
+  // the dev turns to the boss while the boss speaks, easing over the camera move into and out of that turn
+  const ti = T.turns.indexOf(turn), lookOf = t => t && t.speaker === 'boss' ? 1 : 0;
+  let look = lookOf(turn);
+  if (f < turn.voice_frame && ti > 0) {
+    const t = easeInOut((f - (turn.frame_start - 1)) / (turn.voice_frame - (turn.frame_start - 1)));
+    look = lookOf(T.turns[ti - 1]) + (look - lookOf(T.turns[ti - 1])) * t;
+  }
+  animateBodies(f, fps, energy, emphasis, look);
 
   for (const s of Object.values(SHOTS)) s.bubbleObj.root.visible = !!speaking && s === SHOTS[turn.shot];
 
@@ -654,11 +751,11 @@ window.renderFrame = function (f) {
   }
   return { ms };
 };
-window.renderStill = function (shot, f = 1) {  // one frame of a named shot with everyone at rest, no bubble or card
+window.renderStill = function (shot, f = 1, look = 0) {  // one frame of a named shot with everyone at rest, no bubble or card
   for (const s of Object.values(SHOTS)) s.bubbleObj.root.visible = false;
   for (const el of document.querySelectorAll('.card')) el.style.display = 'none';
   bubbleEl.style.display = 'none';
-  animateBodies(f, T ? T.fps : 12, { dev: 0, claude: 0 });
+  animateBodies(f, T ? T.fps : 12, { dev: 0, claude: 0 }, {}, look);
   for (const a of assets) if (a.mixer) a.mixer.setTime(f / (T ? T.fps : 12));
   shotFace(camera, SHOTS[shot].anchor, SHOTS[shot].camera);
   renderer.render(scene, camera);
@@ -672,6 +769,8 @@ window.renderTitle = function (opts = {}) {
   bubbleEl.style.display = 'none';
   document.getElementById('stage').classList.add('title');
   document.getElementById('title').style.display = 'block';
+  if (opts.h1) document.querySelector('#title h1').innerHTML = opts.h1;    // per-video title text
+  if (opts.sub) document.querySelector('#title .sub').innerHTML = opts.sub;
   animateBodies(1, 12, { dev: 0, claude: 0 });
   for (const a of assets) if (a.mixer) a.mixer.setTime(0);
   for (const o of parts('claude').eyes) pose(o, POSE.claude.eyes.wide);
@@ -682,6 +781,12 @@ window.renderTitle = function (opts = {}) {
   const fwd = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
   const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0));
   scene.updateMatrixWorld(true);
+  if (CHAR.dev.headRest) {  // a portrait looks into the camera: undo the pose's head turn (towards the mascot), keep its tilt
+    const h = CHAR.dev.bones.Head;
+    const facing = fwd.clone().applyQuaternion(h.getWorldQuaternion(new THREE.Quaternion()).multiply(CHAR.dev.headRest.clone().invert()));
+    turnAboutUp(h, Math.atan2(fwd.x, fwd.z) - Math.atan2(facing.x, facing.z));
+    scene.updateMatrixWorld(true);
+  }
   const head = CHAR.dev.head.getWorldPosition(new THREE.Vector3());
   claude.root.position.copy(head).addScaledVector(fwd, opts.gap ?? .5).addScaledVector(right, opts.side ?? .04).add(new THREE.Vector3(0, opts.mascotUp ?? -.3, 0));
   claude.root.rotation.y = yaw + deg(opts.mascotTurn ?? 25);

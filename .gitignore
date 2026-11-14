@@ -16,7 +16,7 @@ desktop.ini
 node_modules/
 experiments/threejs/bundle.js
 experiments/threejs/shots/
-experiments/threejs/assets/**/*.glb
-experiments/threejs/assets/**/*.gltf
-experiments/threejs/assets/**/*.bin
-experiments/threejs/assets/**/*.png
+# the models the videos use are tracked (CC0, licence file alongside); packs only downloaded to try out are not
+experiments/threejs/assets/ubc/
+experiments/threejs/assets/kaykit_*.glb
+experiments/threejs/assets/kenney_*.glb

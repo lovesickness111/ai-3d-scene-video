@@ -5,7 +5,7 @@
   },
   {
     "speaker": "claude",
-    "text": "Có, **7 best practice**, tao học bằng tiền điện của mày. Số một: **render thử trước, render full sau**. Render full có khi mất nửa tiếng; render thử ba frame độ phân giải thấp mất ba mươi giây. Lỗi cắt đầu nhân vật phải lộ ra ở chỗ ba mươi giây."
+    "text": "Có, **8 best practice**, tao học bằng tiền điện của mày. Số một: **render thử trước, render full sau**. Render full có khi mất nửa tiếng; render thử ba frame độ phân giải thấp mất ba mươi giây. Lỗi cắt đầu nhân vật phải lộ ra ở chỗ ba mươi giây."
   },
   {
     "speaker": "dev",
@@ -53,6 +53,19 @@
     "speaker": "claude",
     "text": "Ghép **12 khung thành một contact sheet**, đọc một lần thay vì mười hai lần. Render thử ở **độ phân giải thấp**. Log dài thì **lọc lấy dòng lỗi**, không đọc cả nghìn dòng. Và việc lặp hàng loạt đẩy sang **model nhỏ**: Haiku rẻ hơn Opus cỡ bốn mươi lần. Rule ghi vào skill cũng là tiết kiệm: phiên sau không phải mò lại từ đầu.",
     "illustration": "tokens"
+  },
+  {
+    "speaker": "dev",
+    "text": "Mày bảo việc lặp thì giao model nhỏ. Thế cái nào dùng model xịn, cái nào dùng model vừa?"
+  },
+  {
+    "speaker": "claude",
+    "text": "Đó là best practice thứ tám: **đúng model, đúng việc**. Đây, mày nhìn lên bảng này nha."
+  },
+  {
+    "speaker": "claude",
+    "text": "Model xịn như **Opus 5.5**, hoặc **Fable 5.1** khi bí, dùng lúc cần **nghĩ**: viết kịch bản, thiết kế cảnh và thẻ mới, debug khi pipeline hỏng, dò tư thế nhân vật. Model vừa như **Sonnet 5.5** dùng lúc **chạy theo quy trình đã viết sẵn**: TTS, render thử, ghép video, soát lỗi lộ rõ. Model nhỏ như **Haiku 5.5** dùng cho việc lặp hàng loạt có hay không. Skill càng chi tiết thì càng dùng được model rẻ.",
+    "illustration": "models"
   },
   {
     "speaker": "dev",

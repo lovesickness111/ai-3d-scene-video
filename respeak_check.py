@@ -1,8 +1,10 @@
-"""Re-speak the turns of a run whose voice the accent judges do not both hear as northern.
+"""Re-speak the turns of a run whose reading fails reading_check.py: a non-northern accent, or a word
+both judges hear misread, skipped or added (English terms included).
 
-Runs accent_check.py on every clip (or --turns), and for each failing turn deletes the
-wav and its raw engine audio, speaks it again with tts.py and checks again, up to --tries
-times. Prints one line per attempt; exits 1 if a turn still fails.
+Checks every clip (or --turns), and for each failing turn deletes the wav and its raw engine audio,
+speaks it again with tts.py and checks again, up to --tries times. Prints one line per attempt; exits 1
+if a turn still fails. A failure that survives every try is usually the script or pronunciation.json,
+not luck: fix the respelling instead of retrying more.
 
 .venv/Scripts/python.exe respeak_check.py conversation_lessons_1.json output/lessons_1
 """
@@ -13,12 +15,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from tts import VOICES
-
-
-def judge(py, wav):
-    out = subprocess.run([py, 'accent_check.py', str(wav)], capture_output=True, text=True, encoding='utf-8').stdout
-    return [line.split()[2] for line in out.splitlines() if line.strip()]
+from reading_check import check_turn
+from tts import ROOT, VOICES, load_env, load_pronunciation
 
 
 def main():
@@ -30,16 +28,22 @@ def main():
     ap.add_argument('--engine', default='gemini')
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
+    load_env()
     py, audio = sys.executable, Path(args.run)/'audio'
-    manifest = json.loads((audio/'audio.json').read_text(encoding='utf-8'))
-    turns = [int(v) for v in args.turns.split(',')] if args.turns else sorted(int(k) for k in manifest)
+    script = json.loads(Path(args.conversation).read_text(encoding='utf-8'))
+    pronunciation = load_pronunciation(ROOT/'pronunciation.json')
+    turns = [int(v) for v in args.turns.split(',')] if args.turns else range(len(script))
     failed = []
     for t in turns:
         for attempt in range(1, args.tries+1):
-            verdicts = judge(py, audio/f'turn_{t:02d}.wav')
-            ok = verdicts.count('northern') == len(verdicts) >= 1
-            print(f'turn {t} try {attempt}: {verdicts}{"" if ok else "  -> re-speak"}')
-            if ok:
+            r = check_turn(t, script[t]['text'], audio/f'turn_{t:02d}.wav', pronunciation)
+            last = attempt == args.tries
+            print(f"turn {t} try {attempt}: accent {r['accents']} both {r['both']} one {r['one']}"
+                  f"{'' if r['ok'] or last else '  -> re-speak'}")
+            if r['ok']:
+                break
+            if last:
+                failed.append(t)
                 break
             m = json.loads((audio/'audio.json').read_text(encoding='utf-8'))[str(t)]
             cfg = VOICES[args.engine][m['speaker']]
@@ -48,10 +52,8 @@ def main():
                 p.unlink(missing_ok=True)
             subprocess.run([py, 'tts.py', args.conversation, '--out', args.run, '--turns', str(t), '--engine', args.engine],
                            check=True, capture_output=True)
-        else:
-            failed.append(t)
     if failed:
-        print('still not northern:', failed)
+        print('still failing:', failed)
         sys.exit(1)
 
 
