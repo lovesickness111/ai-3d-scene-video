@@ -1,0 +1,40 @@
+.claude/skills/threejs-3d-video/SKILL.md
+  h_0287b4c3380af8 84-87,96,101
+.claude/skills/threejs-3d-video/references/assets.md
+  h_0287b4c3380af8 31,40-44
+.claude/skills/threejs-3d-video/references/characters.md
+  h_0287b4c3380af8 3-66
+.claude/skills/threejs-3d-video/references/thumbnail.md
+  h_0287b4c3380af8 26-27
+.claude/skills/threejs-3d-video/templates/assets/boss_suit.json
+  h_0287b4c3380af8 21,24-25
+.claude/skills/threejs-3d-video/templates/assets/dev_casual.json
+  h_0287b4c3380af8 62,65-67
+.claude/skills/threejs-3d-video/templates/index.html
+  h_0287b4c3380af8 221
+.claude/skills/threejs-3d-video/templates/scene.js
+  h_0287b4c3380af8 43-44,344,552-553,556-567
+conversation_lessons_2.json
+  h_0287b4c3380af8 4,8,12,16,20,25,29,33,37,41,46,50,54,59,63,67,72,76,80
+experiments/threejs/assets/boss_suit.json
+  h_0287b4c3380af8 21,24-25
+experiments/threejs/assets/dev_casual.json
+  h_0287b4c3380af8 62,65-67
+experiments/threejs/index.html
+  h_0287b4c3380af8 221
+experiments/threejs/scene.js
+  h_0287b4c3380af8 43-44,344,552-553,556-567
+pronunciation.json
+  h_0287b4c3380af8 92-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "dfb6835ddf99cbf7fcd9f7774647ea20ec27db74",
+  "prompts": {},
+  "humans": {
+    "h_0287b4c3380af8": {
+      "author": "nvcuong1 <nvcuong1@software.misa.com.vn>"
+    }
+  }
+}
