@@ -59,11 +59,12 @@
     },
     "face": {
       "anchorUp": 0.1,
-      "mouthFwd": 0.104,
+      "mouthFwd": 0.114,
       "mouthUp": 0.03,
       "mouthSide": 0,
-      "mouthR": 0.016,
-      "anchorYaw": -54
+      "anchorYaw": -54,
+      "mouthW": 0.028,
+      "mouthH": 0.008
     },
     "ik": {
       "Hand.R": {

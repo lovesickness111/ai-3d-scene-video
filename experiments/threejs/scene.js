@@ -40,6 +40,8 @@ for (const [name, [rgb, rough, emit = 0, metal = 0]] of Object.entries(MATERIALS
   M[name] = new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal,
     emissive: emit ? color : new THREE.Color(0), emissiveIntensity: emit });
 }
+// the glued mouth of a ready-made character: unlit and dark like the painted eyes it sits under
+M.mouthFlat = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(.3, .13, .11, THREE.SRGBColorSpace), side: THREE.DoubleSide });
 
 const scene = new THREE.Scene();
 const add = (mesh, parent) => { (parent || scene).add(mesh); mesh.castShadow = mesh.receiveShadow = true; return mesh; };
@@ -339,7 +341,7 @@ const POSE = {  // qa_scene.py FACE_POSES (Blender scale order); the first pose 
          eyes: { rest: {}, blink: { scale: [1.1, 1, .15] } }, brows: { rest: {}, up: { lift: .012 } } },
   claude: { mouth: { closed: { hidden: true }, half: {}, open: { scale: [1.15, 1, 2.3], lift: -.006 } },
             eyes: { rest: {}, wide: { scale: [1.15, 1, 1.3] }, blink: { scale: [1.25, 1, .16] } } },
-  dev_rigged: { mouth: { closed: { scale: [1.1, 1, .5] }, half: {}, open: { scale: [.95, 1, 1.8] } },  // a mouth glued to a bone: scale only
+  dev_rigged: { mouth: { closed: { scale: [1.15, 1, .28] }, half: {}, open: { scale: [1, 1, 1.6] } },  // flat oval in face axes: [width, -, height]
                 eyes: { rest: {} }, brows: { rest: {} } },
 };
 const EMPHASIS = { dev: ['brows', 'up'], claude: ['eyes', 'wide'] };
@@ -545,16 +547,24 @@ function riggedCharacter(root, g, a) {
   anchor.position.copy(headPos).addScaledVector(fwd, face.anchorFwd ?? 0).add(new THREE.Vector3(0, face.anchorUp ?? .1, 0));
   anchor.rotation.y = deg((a.yaw || 0) + (face.anchorYaw ?? 22));  // same frame as the built dev's head, so the bubble offsets still apply
   scene.add(anchor);
-  const mouth = new THREE.Mesh(new THREE.SphereGeometry(face.mouthR ?? .012, 24, 12), M.mouth);
-  mouth.scale.set(1.3, .5, .5);
-  bones.Head.add(mouth);
   const side = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0));  // the character's right
   // the mouth offset is measured on the unposed, upright head, then turned the way the pose turned the head
-  const turn = a.headRest ? bones.Head.getWorldQuaternion(new THREE.Quaternion()).multiply(a.headRest.clone().invert()) : new THREE.Quaternion();
+  const headQ = bones.Head.getWorldQuaternion(new THREE.Quaternion());
+  const turn = a.headRest ? headQ.clone().multiply(a.headRest.clone().invert()) : new THREE.Quaternion();
   const offset = new THREE.Vector3().addScaledVector(fwd, face.mouthFwd ?? .09).addScaledVector(side, face.mouthSide ?? 0)
     .add(new THREE.Vector3(0, face.mouthUp ?? .04, 0)).applyQuaternion(turn);
-  mouth.position.copy(bones.Head.worldToLocal(headPos.clone().add(offset)));
-  mouth.scale.divide(bones.Head.getWorldScale(new THREE.Vector3()));
+  // The mouth is drawn like the model's painted eyes: a flat, dark, unlit oval on the face (a lit sphere read as a
+  // pink lump stuck on the face). It sits in a holder carrying the face's own axes -- x across, y up, z out of the
+  // face -- so the talking poses stretch it up and down whatever way the Head bone's axes point.
+  const holder = new THREE.Group();
+  bones.Head.add(holder);
+  holder.position.copy(bones.Head.worldToLocal(headPos.clone().add(offset)));
+  const faceQ = turn.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), deg(a.yaw || 0)));
+  holder.quaternion.copy(headQ.clone().invert().multiply(faceQ));
+  holder.scale.set(1, 1, 1).divide(bones.Head.getWorldScale(new THREE.Vector3()));
+  const mouth = new THREE.Mesh(new THREE.CircleGeometry(.5, 32), M.mouthFlat);
+  mouth.scale.set(face.mouthW ?? .026, face.mouthH ?? .009, 1);  // metres: the "half" pose; closed / open scale it
+  holder.add(mouth);
   CHAR[a.role] = { rigged: true, root: g, head: anchor, mouth: [mouth], eyes: [], brows: [], bones, headRest: a.headRest };
 }
 

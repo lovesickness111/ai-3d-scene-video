@@ -1,47 +1,69 @@
 # Nhân vật trong pipeline three.js
 
-## Dev = Quaternius "Ultimate Modular Men – Casual" (chốt 2026-11-13)
+## Dev = Quaternius "Ultimate Modular Men – Casual" (chốt 2026-11-13, sửa tới 2026-11-15)
 
-File `threejs/assets/quaternius/ModularMen_Casual.glb` (CC0), spec `threejs/assets/dev_casual.json` — mặc định
-của `shoot.mjs`. Đổi trang phục/giới tính = đổi `file` (Suit, Worker, Casual2, modular_women/*), pose và miệng
-dùng lại được vì cùng bộ xương.
+File `threejs/assets/quaternius/ModularMen_Casual.glb` (CC0, có commit trong repo), spec
+`threejs/assets/dev_casual.json`, là mặc định của `shoot.mjs`. Đổi trang phục hay giới tính thì đổi `file`
+(Suit, Worker, Casual2, modular_women/*): pose, IK và miệng dùng lại được vì cùng bộ xương.
 
-Cách nó được đặt vào cảnh (`riggedDev()` trong `scene.js`):
+**Dáng chốt:** thân ngồi thẳng vào laptop, ghế lùi khỏi mép bàn một chút, hai bàn tay úp trên bàn phím và đứng
+yên, mặt quay khoảng 60° sang mascot, miệng phẳng tối màu giữa mặt. Lúc sếp nói thì quay đầu sang sếp
+(`look`, xem phần sếp).
 
-1. `replaceDev`: ẩn `dev.body` (người dựng code) nhưng giữ **ghế** (ghế tách thành nhóm riêng vì lý do này);
-   ghế dời theo `loc`/`yaw` của spec.
-2. Pose (chốt 2026-11-13 theo góp ý người dùng): **thân ngồi thẳng vào laptop, hai tay trên bàn phím, mặt
-   quay sang mascot**. `loc (−0,15, −0,6)` (ngồi lùi khỏi mép bàn một chút), `yaw 188` (thẳng với laptop xoay
-   8°). Chân: hông `side +85`, gối `side −85`. **Tay bằng `ik` tới tọa độ thật của laptop** (chốt 2026-11-14,
-   người dùng chê tay chỉnh bằng góc khớp "chưa hợp lý"): laptop ở `(−0,2, −0,05)`, xoay 8°, mặt phím cao
-   0,77 m. Cổ tay đặt `at` ở chỗ kê tay trước bàn phím (local laptop `(±0,105, −0,11)`, cao 0,79). Ngón
-   `Index2` chĩa tới hàng phím giữa (`(±0,10, −0,02)`, cao 0,775). Ngón cái `thumbTo` hướng vào trong
-   (`[∓1, 0, 0]`) để lòng bàn tay úp xuống. Khuỷu `pole [±0,6, −1, −1]` (thả xuống, hơi ra ngoài và ra sau).
-   Tọa độ do script Python đổi từ local laptop ra phòng, giữ bằng số trong spec. Cổ tay cách nhau ±0,075 thì hai
-   bàn tay chạm nhau giữa phím. Đầu quay sang mascot ≈ 60°: `Neck up −25` + `Head [−12, −35, 0]` (độ local:
-   cúi 12°, xoay 35°; dấu + thì quay ra xa mascot); bụng +8°. `offset z −0,42` hạ mông xuống ghế. Soát bằng
-   still `dev_side` (nhìn ngang), `dev_top` (trên vai xuống), `dev_hands` (cận tay): chỉ nhìn ngang thì không
-   biết tay nằm trên phím hay cạnh laptop, không thấy lòng hay mu bàn tay úp xuống.
-   (Đã thử trước đó: tay bằng góc khớp `fwd ±75, side 20, up ±50; khuỷu 50; Hand fwd −100/+70` thì mu bàn tay
-   úp xuống phím và hai tay lệch nhau. Pose cũ quay cả người sang mascot: `yaw 112`.)
-3. **Neo đầu** = `Group` tĩnh tại vị trí xương Head + 0,1 m, xoay `yaw + anchorYaw` (`anchorYaw −54` giữ neo
-   cùng hướng thế giới 134° như pose cũ, nên offset bong bóng và camera `SHOTS` dùng lại được): camera các
-   shot `dev_*` và bong bóng treo vào đây (offset camera đặt về 0 ở `init`).
-4. **Miệng** = sphere `M.mouth` r 0,016 scale (1.3,.5,.5) gắn làm con của xương Head; vị trí = đầu + 0,104 m
-   trước + 0,03 m lên, `mouthSide 0` (−0,015 bị người dùng chê lệch phải), đo trên đầu **chưa pose** (thẳng, nhìn theo `yaw`) rồi xoay theo đúng
-   góc pose đã xoay xương Head (`a.headRest` chụp quaternion đầu trước khi pose), nên quay/cúi đầu không làm
-   miệng lệch. Đổi model hay đổi số thì dò bằng still `dev_face` (chính diện) + crop `dev_talk`: miệng ra ngoài
-   mặt da thì nhìn nghiêng thấy lồi như mũi hề, vào sâu quá thì mất. Pose `dev_rigged`: closed (1.1,1,.5),
-   half (nghỉ), open (.95,1,1.8) — chỉ scale, không `lift`.
-5. **Cử chỉ thủ tục** (`animateBodies` nhánh `CHAR.dev.rigged`): mỗi khung reset xương về `userData.base`
-   (pose ngồi) rồi cộng sin: đầu gật/nghiêng × (0,3 + energy), gối phải gõ nhịp. Nhấn đầu câu = gật −0,09 rad.
-   **Tay và ngực đứng yên** (người dùng: "tay không di chuyển nữa, cứ đặt tự nhiên trên bàn phím"). Ngực thở
-   cũng kéo tay theo, nên bỏ luôn.
-6. Không có mày/chớp mắt (mặt là texture); `EMPHASIS.dev` giữ `['brows','up']` nhưng mảng brows rỗng → vô hiệu,
-   gật đầu thay thế.
+`riggedCharacter()` trong `scene.js` (chung cho mọi nhân vật có `role`) đặt nó vào cảnh:
 
-Thứ **chưa làm**: retarget clip UAL (Sitting_Talking_Loop) lên rig này — `SkeletonUtils.retargetClip` làm
-nhân vật co thành chấm (rest pose/scale khác); cử chỉ "có nghĩa" (chỉ tay lên thẻ) theo từ khóa.
+1. **Ghế:** `replaceDev` ẩn `dev.body` (người dựng code) nhưng giữ ghế (nhóm riêng); ghế dời theo `loc`/`yaw`.
+2. **Thân và chân:** `loc (−0,15, −0,6)`, `yaw 188` (thẳng với laptop xoay 8°), `offset z −0,42` hạ mông xuống
+   ghế. Hông `side +85`, gối `side −85` (ống chân thẳng xuống), bụng `[8, 0, 0]`.
+3. **Đầu:** `Neck [["up", −25]]` + `Head [−12, −35, 0]` (độ local: cúi 12° nhìn màn hình, xoay 35° sang mascot;
+   dấu + thì quay ra xa mascot).
+4. **Tay = `ik` tới tọa độ thật của laptop** (`(−0,2, −0,05)`, xoay 8°, mặt phím cao 0,77 m):
+   - Cổ tay `at` ở chỗ kê tay trước bàn phím: local laptop `(±0,105, −0,11)`, cao 0,79.
+   - `finger: Index2.*` chĩa tới hàng phím giữa: local `(±0,10, −0,02)`, cao 0,775.
+   - `thumb: Thumb2.*`, `thumbTo [∓1, 0, 0]` (ngón cái vào trong nên lòng bàn tay úp xuống).
+   - Khuỷu `pole [±0,6, −1, −1]` (thả xuống, hơi ra ngoài và ra sau).
+
+   Spec giữ tọa độ phòng bằng số. Đổi laptop thì tính lại bằng phép xoay `x cos8 − y sin8, x sin8 + y cos8` cộng
+   vị trí laptop.
+5. **Neo đầu** = `Group` tĩnh tại xương Head + 0,1 m, xoay `yaw + anchorYaw` (`anchorYaw −54` giữ hướng thế giới
+   134° như dáng cũ, nên offset bong bóng và camera trong `SHOTS` dùng lại được). Camera các shot `dev_*` và bong
+   bóng treo vào đây, không treo vào xương đang cử động, để bong bóng không nhảy.
+6. **Miệng:** hình bầu dục phẳng, tối màu, không đổ sáng (`CircleGeometry` + `M.mouthFlat`, `MeshBasicMaterial`
+   hai mặt), cùng kiểu với mắt in trên texture.
+   - Nằm trong `holder` con của xương Head, mang trục của khuôn mặt (x ngang, y lên, z chĩa ra), nên các dáng nói
+     chỉ kéo miệng theo chiều dọc.
+   - `face`: `mouthFwd 0,114`, `mouthUp 0,03`, `mouthSide 0`, cỡ dáng half `mouthW 0,028 × mouthH 0,008` (mét).
+   - Vị trí đo trên đầu chưa pose rồi xoay theo góc pose của xương Head (`a.headRest`), nên quay hay cúi đầu
+     không làm miệng lệch.
+   - Dáng `POSE.dev_rigged`: closed `[1.15, 1, .28]` (một nét), half (nghỉ), open `[1, 1, 1.6]` (bầu dục bè ngang).
+7. **Cử động** (`animateBodies`, nhánh `CHAR.dev.rigged`): mỗi khung reset xương về `userData.base` rồi chỉ cộng
+   đầu gật/nghiêng × (0,3 + energy), gật −0,09 rad ở đầu mỗi câu, gối phải gõ nhịp khi nói. Tay và ngực **không
+   động**: ngực thở cũng kéo tay theo.
+8. Không có mày hay chớp mắt (mặt là texture). `EMPHASIS.dev` trỏ vào mảng brows rỗng nên vô hiệu, gật đầu thay.
+9. **Thumbnail:** `renderTitle` bỏ góc xoay đầu sang mascot (giữ góc cúi), để chân dung nhìn thẳng camera.
+
+**Soát dev** (still, `shoot.mjs --still a,b,c`):
+- `dev_hands` (cận tay), `dev_top` (trên vai xuống), `dev_side` (nhìn ngang). Chỉ nhìn ngang thì không biết tay
+  nằm trên phím hay cạnh laptop, cũng không thấy lòng hay mu bàn tay úp xuống.
+- `dev_face` + crop `dev_talk` cho miệng. Chuỗi 12 khung liền nhau của một lượt nói để xem miệng đổi dáng.
+- `--look 1` cho dáng quay sang sếp. `--title` cho chân dung thumbnail.
+- So hai khung cùng lượt ở vùng tay (độ chênh trung bình gần 0) để chắc tay đứng yên.
+
+**Góp ý của người dùng về dev** (giữ cho các video sau):
+- Mặt quay vào bàn, ngồi lùi ra sau một tý, mặt quay sang phía mascot; khi sếp nói thì quay mặt sang sếp.
+- Lòng bàn tay úp xuống phím (bản cũ có lúc mu bàn tay úp xuống). Tay để IK đặt, không đoán góc khớp. Trong video
+  tay không di chuyển.
+- Miệng không lệch sang bên, không được là cục lồi có đổ sáng ("xấu, không liền mạch").
+
+**Đã thử rồi bỏ:**
+- Dáng cũ quay cả người sang mascot: `yaw 112`.
+- Tay bằng góc khớp (`UpperArm fwd ±75, side 20, up ±50`; khuỷu 50; `Hand fwd −100/+70`): hai tay không đối
+  xứng, mu bàn tay úp xuống phím.
+- Cử chỉ gõ phím, tay vung theo giọng: người dùng không muốn tay động.
+- Miệng khối cầu hồng có đổ sáng: lồi như mũi hề khi nhìn nghiêng, xấu khi há. Mảng phẳng đặt ở `mouthFwd 0,108`
+  thì chìm vào mặt, chỉ còn một chấm. Há cao hơn `1,6` thì thành chữ "o" như đang ngạc nhiên.
+- Retarget clip UAL (Sitting_Talking_Loop) bằng `SkeletonUtils.retargetClip`: nhân vật co thành chấm. Chưa làm
+  cử chỉ "có nghĩa" (chỉ tay lên thẻ).
 
 ## Ông sếp = Quaternius Modular Men "Suit" (preview 2026-11-13, để dành cho clip sau)
 

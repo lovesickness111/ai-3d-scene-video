@@ -81,8 +81,10 @@ Model GLB đặt vào cảnh qua file spec JSON (`--assets threejs/assets/<spec>
 
 Chủ thể không cắt mép; bong bóng **to hết mức nhưng trọn trong khung**, **đứng yên suốt câu** (neo vào phần
 không animate — so 2 khung cùng turn) và **đúng phía** (neo xoay cùng hệ trục nhân vật); thẻ không che
-mặt; tay nhân vật không đè lên vật khác (đã dính: tay dev đè mặt mascot); chân thẳng xuống sàn; miệng gắn thêm
-nằm đúng giữa mặt, không chạm mũi; không sọc bóng trên tường; chữ Việt đủ dấu; `duration` video = audio.
+mặt; tay nhân vật không đè lên vật khác (đã dính: tay dev đè mặt mascot); bàn tay đặt đúng chỗ, **lòng bàn tay úp
+xuống phím** (nhìn cận tay, đừng chỉ nhìn ngang) và đứng yên trong video; chân thẳng xuống sàn; miệng gắn thêm
+là mảng phẳng tối nằm **giữa mặt** (không lệch, không lồi, không chìm mất, xem chuỗi khung một lượt nói); không
+sọc bóng trên tường; chữ Việt đủ dấu; `duration` video = audio. Thông số và góp ý về dev ở `references/characters.md`.
 
 ## Tài liệu trong skill
 
@@ -91,11 +93,11 @@ nằm đúng giữa mặt, không chạm mũi; không sọc bóng trên tường
 | `references/pipeline.md` | Kiến trúc, hợp đồng dữ liệu (`audio.json`, `timeline.json`), lịch khung, lip-sync, flag `shoot.mjs`, tốc độ chụp, bẫy khung thừa |
 | `references/threejs-gotchas.md` | Đổi trục Blender→three, màu sRGB/AgX, đèn + bóng (PCF/VSM), camera `shotFace` (lens→fov), bbox màn hình, chữ DOM, Chrome flags |
 | `references/assets.md` | Nguồn model đã kiểm chứng + license, cách tải qua GitHub, spec JSON (`asIs`, `height`, `pose` theo trục thế giới, `offset`, `animations`, `role`), bẫy GLTFLoader, kỹ thuật dò pose bằng sweep |
-| `references/characters.md` | Dev = Quaternius Casual (ngồi, miệng gắn xương Head, cử chỉ thủ tục), mascot Clawd dựng code, neo camera/bong bóng, pose mặt |
+| `references/characters.md` | Dev = Quaternius Casual (ngồi gõ laptop, tay IK trên bàn phím đứng yên, miệng phẳng, quay đầu sang mascot hoặc sếp) kèm góp ý của người dùng; ông sếp (Suit, tay đút túi); mascot Clawd dựng code; neo camera/bong bóng; dò tay bằng `ik` |
 | `references/thumbnail.md` | Thẻ tiêu đề/thumbnail: chân dung dev trên nền 2D, mascot ảnh 2D góc dưới-phải, chữ HTML; `--title`, ghép 1 s + xfade vào video; góp ý bố cục của người dùng |
 | `templates/scene.js` | Cảnh tham chiếu: phòng, bàn, dev primitive (dự phòng), mascot, bong bóng, SHOTS, nạp GLB, lịch camera, lip-sync, thẻ |
 | `templates/index.html` | Khung trang 1280×720 + CSS bong bóng/thẻ + 8 thẻ minh họa mẫu |
 | `templates/shoot.mjs` | Lịch từ audio.json, mức mở miệng từ wav, Chrome headless, chụp từng khung, `--frames/--still/--assets/--gpu` |
-| `templates/assets/*.json` | Spec dev Quaternius đã chốt; spec thử KayKit + Kenney |
+| `templates/assets/*.json` | Spec dev Quaternius đã chốt (`dev_casual.json`), ông sếp (`boss_suit.json`); spec thử KayKit + Kenney |
 | `templates/fetch_assets.py` | Tải pack từ GitHub (KayKit, mirror Quaternius, Kenney mirror, UBC/UAL) kèm license |
 | `templates/sheet.py` | Ghép PNG thành contact sheet có nhãn |

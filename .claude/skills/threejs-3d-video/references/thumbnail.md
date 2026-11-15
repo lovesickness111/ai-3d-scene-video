@@ -23,6 +23,8 @@ hiệu ứng tan vào cảnh. Bố cục đã chốt với người dùng (2026-
    cam đất `#c95e34`, vàng `#e0a838`, navy `#21335c`). Chrome chụp DOM + canvas nên ảnh ra đã hoàn chỉnh.
 3. **Chân dung dev**: camera đặt trước mặt theo hướng nhìn của nhân vật, cách neo đầu `camDist 1,5 m`, `fov 32`,
    ngắm lệch `aimSide −0,28` để mặt + vai chiếm nửa trái; mắt mascot `wide`, mọi người ở pose nghỉ (`energy 0`).
+   Dáng ngồi có đầu quay sang mascot, nên `renderTitle` bỏ góc xoay đó (giữ góc cúi) để dev nhìn thẳng camera.
+   Không bỏ thì chân dung trông như ngoảnh mặt đi chỗ khác.
 4. **Mascot = ảnh 2D** `<img id="title-mascot" src="assets/avatar_claude.png">` ghim `right 30px; bottom −40px;
    height 380px`, `drop-shadow` nhẹ; mascot 3D bị ẩn (`opts.mascot3d` để bật lại — khi đó nó đứng cạnh ngực dev,
    tham số `gap/side/mascotUp/mascotScale/mascotTurn`).

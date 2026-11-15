@@ -28,7 +28,7 @@ python <skill>/templates/fetch_assets.py quaternius_modular_men kenney_furniture
 python <skill>/templates/fetch_assets.py --mirror-folders            # mọi pack của mirror Quaternius
 python <skill>/templates/fetch_assets.py --mirror house_interior_pack --only "Chair_|Houseplant_" --models threejs/assets
 ```
-Mỗi pack vào `threejs/assets/<pack>/` kèm license; `.glb` nằm trong `.gitignore`, tải lại được. Chỉ `urllib`,
+Mỗi pack vào `threejs/assets/<pack>/` kèm license. Model video **đang dùng** thì commit vào repo (dùng chung, không phụ thuộc mirror); pack chỉ tải về thử thì để trong `.gitignore`, cần thì tải lại. Chỉ `urllib`,
 GitHub API không token (60 req/giờ). File `.gltf` cần `.bin` + texture cạnh nó; UBC tham chiếu texture tên
 `*_png.png` không có trong repo → copy từ bản không `_png`, và hair "Rigged to Head Bone" dùng `../Textures/`
 → sửa `uri` trong JSON về tên file (xem `experiments/threejs/assets/ubc/` đã sửa).
@@ -37,9 +37,11 @@ GitHub API không token (60 req/giờ). File `.gltf` cần `.bin` + texture cạ
 
 ```json
 [{"file": "quaternius/ModularMen_Casual.glb", "role": "dev", "replaceDev": true, "asIs": true,
-  "loc": [-0.05, -0.85, 0], "yaw": 112, "offset": [0, 0, -0.42],
-  "pose": {"UpperLeg.L": [["side", 85]], "LowerLeg.L": [["side", -85]], "Head": [-6, 0, 0]},
-  "face": {"anchorUp": 0.1, "mouthFwd": 0.13, "mouthUp": 0.035, "mouthSide": -0.015, "mouthR": 0.016}},
+  "loc": [-0.15, -0.6, 0], "yaw": 188, "offset": [0, 0, -0.42],
+  "pose": {"UpperLeg.L": [["side", 85]], "LowerLeg.L": [["side", -85]], "Neck": [["up", -25]], "Head": [-12, -35, 0]},
+  "ik": {"Hand.R": {"at": [-0.0807, -0.1443, 0.79], "pole": [0.6, -1, -1], "fingers": [-0.0982, -0.0559, 0.775],
+                    "finger": "Index2.R", "thumb": "Thumb2.R", "thumbTo": [-1, 0, 0]}},
+  "face": {"anchorUp": 0.1, "anchorYaw": -54, "mouthFwd": 0.114, "mouthUp": 0.03, "mouthSide": 0, "mouthW": 0.028, "mouthH": 0.008}},
  {"file": "kenney_bookcaseOpen.glb", "loc": [-1.05, 1.05, 0], "yaw": 0, "height": 1.9},
  {"file": "kaykit_knight.glb", "loc": [0.15, 0.92, 0], "yaw": -35, "height": 1.3, "clip": "Cheer"}]
 ```

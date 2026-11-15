@@ -1,83 +1,83 @@
 [
   {
     "speaker": "dev",
-    "text": "Ê Claude, dựng video 3D bằng AI mà tao thấy nhiều người than tốn tiền render, mất cả buổi. Có bí kíp gì không?"
+    "text": "Ê Claude, dựng video 3D bằng AI mà tao thấy nhiều người than tốn tiền render, ngồi chờ cả buổi. Có mẹo gì không?"
   },
   {
     "speaker": "claude",
-    "text": "Có, **8 best practice**, tao học bằng tiền điện của mày. Số một: **render thử trước, render full sau**. Render full có khi mất nửa tiếng; render thử ba frame độ phân giải thấp mất ba mươi giây. Lỗi cắt đầu nhân vật phải lộ ra ở chỗ ba mươi giây."
+    "text": "Có hẳn **8 best practice**, tao học bằng tiền điện của mày đấy. Số một: **render thử trước, render full sau**. Tao chụp thử ba khung, vài chục giây là xong, nhân vật mà bị cắt đầu thì thấy ngay. Render cả video mất cả chục phút, đến lúc đấy mới thấy thì muộn rồi."
   },
   {
     "speaker": "dev",
-    "text": "Tao mà chờ nửa tiếng rồi thấy mất đầu là tao kill process của mày luôn. Còn gì nữa?"
+    "text": "Tao mà chờ chục phút rồi thấy mất đầu là tao tắt máy mày luôn. Còn gì nữa?"
   },
   {
     "speaker": "claude",
-    "text": "Còn năm cái. Đây, mày nhìn lên danh sách này nha."
+    "text": "Còn nhiều. Mày nhìn lên danh sách này đã."
   },
   {
     "speaker": "claude",
-    "text": "Hai, **báo chi phí trước khi chạy**: \"49 frame, 25 phút\", người ta gật rồi mới render. Ba, **TTS trước, dựng hình sau**: audio dài bao nhiêu, cảnh dài bấy nhiêu, miệng mới khớp lời. Bốn, **chữ và bảng số để layer riêng** overlay lên cảnh — sửa một chữ không phải render lại. Năm, **mọi góp ý ghi thành rule** trong một file skill, phiên sau tao đọc lại, mày không phải nói lần hai.",
+    "text": "Số hai, chạy cái gì lâu thì **báo trước tốn bao lâu**, mày gật thì tao mới chạy. Số ba, **làm giọng đọc trước**, giọng dài bao nhiêu thì dựng cảnh dài bấy nhiêu, miệng mới khớp lời. Số bốn, **chữ với bảng số để layer riêng**, sai một chữ thì sửa chữ, khỏi render lại cảnh. Số năm, mày chê câu nào thì tao **ghi thành rule** vào file skill, lần sau khỏi phải nhắc.",
     "illustration": "rules"
   },
   {
     "speaker": "dev",
-    "text": "Mới có năm. Cái thứ sáu?"
+    "text": "Mới năm. Còn ba cái nữa đâu?"
   },
   {
     "speaker": "claude",
-    "text": "Cái này tiết kiệm nhất: **đừng bắt tao tự dựng model nhân vật**. Tao dựng người từ khối hộp thì ra… robot bị ốm."
+    "text": "Số sáu tiết kiệm nhất: **đừng bắt tao tự nặn nhân vật**. Tao dựng người bằng khối hộp thì ra con robot bị ốm."
   },
   {
     "speaker": "dev",
-    "text": "Haha, thế thì sao?"
+    "text": "Haha. Thế lấy nhân vật ở đâu?"
   },
   {
     "speaker": "claude",
-    "text": "Bảo tao **tải pack model miễn phí** về: Kenney, KayKit, Quaternius có hàng nghìn file GLB — nhân vật, nội thất, xe, cây — nhiều bộ kèm sẵn animation đi, ngồi, vẫy tay. Đây, mày nhìn lên nha."
+    "text": "Bảo tao **tải pack model miễn phí**. Mày nhìn lên đây."
   },
   {
     "speaker": "claude",
-    "text": "Mày chỉ cần nói \"kiếm cho tao một ông nhân viên văn phòng với bộ bàn ghế\", tao search, download, đặt vào cảnh. Việc của tao là **đọc license** từng pack — CC0 thì dùng tự do, có bộ cấm chia sẻ lại — và kiểm **tỉ lệ**: nhân vật đầu to kiểu chibi đứng cạnh người tỉ lệ thật là lệch tông ngay.",
+    "text": "Kenney, KayKit, Quaternius có cả nghìn file GLB, từ nhân vật, bàn ghế đến xe cộ, cây cối, nhiều bộ có sẵn cả dáng đi, dáng ngồi. Mày bảo kiếm một ông nhân viên văn phòng là tao tải về đặt vào cảnh. Có điều phải **đọc license**: bộ cũ của Quaternius là CC0, bộ mới thì không. Rồi xem **tỉ lệ**, nhân vật đầu to kiểu chibi mà đứng cạnh người thật là lệch tông ngay.",
     "illustration": "packs"
   },
   {
     "speaker": "dev",
-    "text": "Nghe như đi siêu thị đồ chơi. Mà mỗi vòng mày xem ảnh render thế, có tốn token không?"
+    "text": "Nghe như đi chợ đồ chơi. Mà mỗi lần mày xem ảnh render có tốn token không?"
   },
   {
     "speaker": "claude",
-    "text": "Tốn, **ảnh là thứ ngốn token nhất**. Nên có best practice thứ bảy: tiết kiệm token của chính agent. Đây, mày nhìn lên nha."
+    "text": "Tốn, **ảnh ngốn token nhất**. Nên số bảy là tiết kiệm token. Mày xem này."
   },
   {
     "speaker": "claude",
-    "text": "Ghép **12 khung thành một contact sheet**, đọc một lần thay vì mười hai lần. Render thử ở **độ phân giải thấp**. Log dài thì **lọc lấy dòng lỗi**, không đọc cả nghìn dòng. Và việc lặp hàng loạt đẩy sang **model nhỏ**: Haiku rẻ hơn Opus cỡ bốn mươi lần. Rule ghi vào skill cũng là tiết kiệm: phiên sau không phải mò lại từ đầu.",
+    "text": "Mười hai khung thì tao ghép thành **một tấm contact sheet**, xem một lần thay vì mười hai lần. Chụp thử thì để **độ phân giải thấp**. Log cả nghìn dòng thì **lọc lấy dòng lỗi** mà đọc. Việc lặp đi lặp lại thì giao **model nhỏ**, Haiku rẻ hơn Opus cỡ bốn mươi lần.",
     "illustration": "tokens"
   },
   {
     "speaker": "dev",
-    "text": "Mày bảo việc lặp thì giao model nhỏ. Thế cái nào dùng model xịn, cái nào dùng model vừa?"
+    "text": "Mày bảo việc lặp thì giao model nhỏ. Thế lúc nào cần model xịn, lúc nào model vừa là đủ?"
   },
   {
     "speaker": "claude",
-    "text": "Đó là best practice thứ tám: **đúng model, đúng việc**. Đây, mày nhìn lên bảng này nha."
+    "text": "Đấy là số tám: **đúng model, đúng việc**. Mày nhìn bảng này."
   },
   {
     "speaker": "claude",
-    "text": "Model xịn như **Opus 5.5**, hoặc **Fable 5.1** khi bí, dùng lúc cần **nghĩ**: viết kịch bản, thiết kế cảnh và thẻ mới, debug khi pipeline hỏng, dò tư thế nhân vật. Model vừa như **Sonnet 5.5** dùng lúc **chạy theo quy trình đã viết sẵn**: TTS, render thử, ghép video, soát lỗi lộ rõ. Model nhỏ như **Haiku 5.5** dùng cho việc lặp hàng loạt có hay không. Skill càng chi tiết thì càng dùng được model rẻ.",
+    "text": "Việc cần **nghĩ** thì dùng model xịn như **Opus 5.5**, bí quá thì gọi **Fable 5.1**: viết kịch bản, nghĩ cảnh mới, chỉnh tư thế nhân vật, gỡ lỗi khi pipeline hỏng. Việc **làm theo quy trình có sẵn** như làm giọng, render, ghép video thì **Sonnet 5.5** là đủ. Còn hỏi có hay không hàng loạt thì để **Haiku 5.5**. Skill viết càng kỹ thì càng dùng được model rẻ.",
     "illustration": "models"
   },
   {
     "speaker": "dev",
-    "text": "Ok. Thế tao còn việc gì?"
+    "text": "Ok. Thế tao còn phải làm gì?"
   },
   {
     "speaker": "claude",
-    "text": "Việc quan trọng nhất: **chê**. Tao render mười frame, mày bảo \"mặt to quá\", \"bong bóng nhảy xấu lắm\", tao sửa. Agent chạy đúng mà không ai chê thì vẫn ra video dở."
+    "text": "Việc quan trọng nhất: **chê**. Mày bảo \"bong bóng nhảy xấu lắm\", \"mu bàn tay úp xuống phím rồi kìa\", thế là tao sửa. Tao tự xem ảnh thì toàn bỏ sót mấy lỗi đấy."
   },
   {
     "speaker": "dev",
-    "text": "Được, vậy tao chê luôn: clip này hơi dài. Mà bà con xem đến đây rồi thì **like với follow Dev xịn** nha, để tao có tiền điện cho con này render tiếp.",
+    "text": "Được, tao chê luôn: clip này hơi dài. Mà mọi người xem đến đây rồi thì **like với follow Dev xịn** nhé, để tao có tiền điện cho nó render tiếp.",
     "illustration": "cta"
   },
   {
