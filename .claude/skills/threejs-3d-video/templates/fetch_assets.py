@@ -15,6 +15,7 @@ import json
 import re
 import sys
 import urllib.request
+import urllib.parse
 from pathlib import Path
 
 HEADERS = {'User-Agent': 'Mozilla/5.0', 'Accept': 'application/vnd.github+json'}
@@ -57,7 +58,7 @@ def api(url):
 
 
 def raw(repo, branch, path):
-    url = f'https://raw.githubusercontent.com/{repo}/{branch}/{path}'
+    url = f'https://raw.githubusercontent.com/{repo}/{branch}/{urllib.parse.quote(path)}'
     with urllib.request.urlopen(urllib.request.Request(url, headers=HEADERS), timeout=180) as r:
         return r.read()
 

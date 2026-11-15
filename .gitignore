@@ -2,7 +2,7 @@ __pycache__/
 *.py[cod]
 .venv/
 .env
-tools/
+/tools/
 output/
 models/
 *.blend1
@@ -20,3 +20,9 @@ experiments/threejs/shots/
 experiments/threejs/assets/ubc/
 experiments/threejs/assets/kaykit_*.glb
 experiments/threejs/assets/kenney_*.glb
+reel25d/bundle.js
+# meme cut-outs from the reference reel: internal demo only, re-create with reel25d/tools/cut_sprites.py
+input/*/sprites/*.png
+tmp/
+fitness-workflow-kit/
+experiments/threejs/assets/quaternius_ubc_ual/

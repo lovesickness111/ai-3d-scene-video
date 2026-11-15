@@ -45,6 +45,14 @@ nằm trong `output/` không đưa lên git; GIF là đoạn 9 giây cắt từ 
 |---|---|
 | KayKit Adventurers + Skeletons (CC0), 76 animation mỗi nhân vật | Quaternius Modular Men/Women (CC0): Suit, Casual, Worker, Formal |
 
+## Video meme 2.5D kiểu cắt dán (`reel25d/`)
+
+Đường thứ ba, cho reel 3:4 kiểu "Roblox × Cheems": một ảnh nền, PNG cắt sẵn dựng đứng, nhân vật khối dựng từ
+hộp bo góc, chữ thoại trên đầu khung, giọng edge-tts, cắt shot thẳng + camera trôi nhẹ lấy parallax.
+Tài nguyên ở `input/<run>/`, kịch bản ở `director/<run>.json`, kết quả ở `output/<run>/`. Cách chạy và
+định dạng kịch bản: [`reel25d/README.md`](reel25d/README.md). Demo đầu tiên: `director/skydive_meme.json`
+(dựng lại một reel 20 s, 21 beat, 4 shot).
+
 ## Cần có
 
 - Blender 4.5 trong `tools/blender-4.5.*-windows-x64/` hoặc biến môi trường `BLENDER_PATH`

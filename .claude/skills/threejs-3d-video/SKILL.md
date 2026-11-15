@@ -23,6 +23,24 @@ liệu/ánh sáng mềm.
 Bản hiện thực đầy đủ đang chạy: `experiments/threejs/` trong repo `ai-3d-scene-video`. Bộ file để khởi tạo
 project khác nằm trong `templates/` của skill này (copy sang `<project>/threejs/`).
 
+Biến thể **"frozen tableau"** (phong cách explainer lịch sử: nhân vật đóng băng một pose bằng
+`mixer.setTime` rồi chỉ camera trôi + BokehPass DOF + bloom + bụi; grade/vignette/chromatic aberration/
+grain làm ở ffmpeg lúc mux). Thử nghiệm 15/11/2026 ở `experiments/tableau/` (scene không thoại, shoot.mjs
+tối giản, node_modules junction sang reel25d) — kỹ thuật CHẠY ĐƯỢC nhưng người dùng chê **chưa đẹp**,
+nặng nhất là lính cầm súng. Bài học giữ lại:
+
+- Pose đóng băng từ UAL1 hoạt động tốt: Sprint_Loop (đám đông chạy, mỗi người một `time` khác), đạo cụ
+  đặt TĨNH theo world-pos của bone (`getWorldPosition` sau `updateMatrixWorld`), không cần attach xương.
+- Vì sao chưa đẹp (sửa trước khi làm lại): (1) **súng ghép từ primitive hộp quá thô** — phải dùng model
+  súng GLB thật (Quaternius Guns/weapons pack hoặc tương đương); (2) **Pistol_Aim cầm súng trường sai
+  tướng** — tay không ôm súng, báng xuyên ngực; cần pose tay theo đúng khẩu súng (sweep xoay xương) hoặc
+  tìm clip Rifle_Aim; (3) **thân UBC Superhero cơ bắp khỏa thân** nhìn dị — tham khảo dùng mannequin trung
+  tính/có đồ; nên thử Quaternius Modular Men (có quần áo, nhưng mirror không animation → pose tay bằng
+  bảng xoay xương đã dò ở mục 5) hoặc retarget lại.
+- Bẫy kỹ thuật: `DirectionalLight.target` phải được `scene.add(light.target)` mới ăn; three bản mới dùng
+  physical lights → intensity 2–6 chứ không phải 0.9–1.25; PointsMaterial không map = chấm vuông, cần
+  CanvasTexture gradient tròn + AdditiveBlending.
+
 ## Nguyên tắc
 
 1. **Stills trước, full capture sau.** Mỗi thay đổi → `--frames a,b,c` hoặc `--still <shot> --frame N`
