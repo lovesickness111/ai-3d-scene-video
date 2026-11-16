@@ -93,7 +93,7 @@ def main():
     turns_text = json.loads(Path(args.conversation).read_text(encoding='utf-8'))
     pronunciation = load_pronunciation(Path(args.pronunciation))
     audio = Path(args.run)/'audio'
-    turns = [int(v) for v in args.turns.split(',')] if args.turns else range(len(turns_text))
+    turns = [int(v) for v in args.turns.split(',')] if args.turns else [i for i, t in enumerate(turns_text) if 'insert' not in t]
     results = []
     for i in turns:
         r = check_turn(i, turns_text[i]['text'], audio/f'turn_{i:02d}.wav', pronunciation, args.models.split(','))

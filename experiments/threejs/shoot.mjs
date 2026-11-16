@@ -48,18 +48,27 @@ function mouthLevels(file) {
   return levels;
 }
 
+// --assets <json>: ready-made glTF models to place in the room (paths relative to assets/).
+// Default: assets/dev_casual.json, the Quaternius character who plays the dev; --assets none for the built dev.
+const assetsSpec = args.assets ?? 'assets/dev_casual.json';
+const spec = assetsSpec === 'none' ? [] : JSON.parse(readFileSync(path.resolve(here, assetsSpec), 'utf8'));
+const hasBoss = spec.some(a => a.role === 'boss');
+
 // ---- schedule, as qa_scene.schedule ----
+// A turn {"insert": name, "seconds": n, "shot": s} holds n seconds for generated video (splice_insert.py puts it in):
+// no voice, frames that get replaced. While the boss is in the room the dev talks to him, seen from his side (devb_*).
 let frame = 1, prev = null;
 const turns = conversation.map((turn, i) => {
-  const a = audio[String(i)];
+  const a = turn.insert ? { seconds: turn.seconds } : audio[String(i)];
   if (!a) throw new Error(`audio.json has no turn ${i}: run tts.py first`);
-  const shot = `${turn.speaker}_${turn.illustration ? 'explain' : 'talk'}`;
+  const bossIn = hasBoss && !(turn.absent || []).includes('boss');
+  const shot = turn.shot || `${turn.speaker === 'dev' && bossIn ? 'devb' : turn.speaker}_${turn.illustration ? 'explain' : 'talk'}`;
   const frame_start = frame;
   const voice_frame = frame + (prev && prev !== shot ? Math.round(move * fps) : 0);
-  const frame_end = voice_frame + Math.ceil((a.seconds + .25) * fps) - 1;
+  const frame_end = voice_frame + (turn.insert ? Math.round(a.seconds * fps) : Math.ceil((a.seconds + .25) * fps)) - 1;
   frame = frame_end + 1; prev = shot;
   return { ...turn, shot, frame_start, voice_frame, frame_end, seconds: a.seconds, cues: a.cues, beats: a.beats,
-           mouth: mouthLevels(path.join(out, 'audio', `turn_${String(i).padStart(2, '0')}.wav`)) };
+           mouth: turn.insert ? [] : mouthLevels(path.join(out, 'audio', `turn_${String(i).padStart(2, '0')}.wav`)) };
 });
 const last = turns[turns.length - 1].frame_end;
 writeFileSync(path.join(out, 'timeline.json'), JSON.stringify(turns.map(({ mouth, ...t }) => t), null, 2));
@@ -68,7 +77,8 @@ console.log(`${turns.length} turns, ${last} frames = ${(last / fps).toFixed(1)} 
 const only = args.frames ? String(args.frames).split(',').map(Number) : null;
 const framesDir = path.join(out, 'frames');
 mkdirSync(framesDir, { recursive: true });
-if (!only) for (const f of readdirSync(framesDir)) if (/^frame_\d{4}\.png$/.test(f) && +f.slice(6, 10) > last) unlinkSync(path.join(framesDir, f));
+// stale frames from a longer earlier capture go -- only on a full capture: a --title/--still run may schedule another cast
+if (!only && !args.title && !args.still) for (const f of readdirSync(framesDir)) if (/^frame_\d{4}\.png$/.test(f) && +f.slice(6, 10) > last) unlinkSync(path.join(framesDir, f));
 
 const browser = await chromium.launch({ channel: 'chrome', headless: true,
   args: ['--allow-file-access-from-files',  // GLTFLoader fetches the .glb files next to index.html
@@ -79,14 +89,13 @@ page.on('console', m => { if (m.type() === 'error') console.log('[page]', m.text
 await page.goto('file://' + path.join(here, 'index.html').replace(/\\/g, '/'));
 await page.waitForFunction(() => window.ready === true, null, { timeout: 60000 });
 console.log('WebGL:', await page.evaluate(() => window.gpu()));
-// --assets <json>: ready-made glTF models to place in the room (paths relative to assets/).
-// Default: assets/dev_casual.json, the Quaternius character who plays the dev; --assets none for the built dev.
-const assetsSpec = args.assets ?? 'assets/dev_casual.json';
-if (assetsSpec !== 'none') {
-  const spec = JSON.parse(readFileSync(path.resolve(here, assetsSpec), 'utf8'));
+if (spec.length) {
   for (const a of spec) { a.url = 'assets/' + a.file; if (a.animations) a.animations = 'assets/' + a.animations; }
   for (const r of await page.evaluate(s => window.loadAssets(s), spec)) console.log('asset', JSON.stringify(r));
 }
+if (args.hide) await page.evaluate(n => window.hide(n), String(args.hide).split(','));  // --hide claude: no mascot in this video
+if (args.room === 'closed') await page.evaluate(() => window.closeRoom());  // --room closed: the right-hand wall too
+if (args.shots) await page.evaluate(c => window.tuneShots(c), JSON.parse(args.shots));
 const info = await page.evaluate(t => window.init(t), { fps, move, turns });
 console.log('shots:', JSON.stringify(info.shots));
 
@@ -101,7 +110,8 @@ if (args.still) {  // --still wide[,dev_side...]: one still per named shot into 
   const f = +(args.frame ?? 1);
   for (const shot of String(args.still).split(',')) {
     const name = `still_${shot}${args.frame ? '_' + f : ''}.png`;
-    await page.evaluate(([s, f, l]) => window.renderStill(s, f, l), [shot, f, +(args.look ?? 0)]);  // --look 1: the dev faces the boss
+    // --look 1: the dev faces the boss; --without boss: the room before he comes in (keyframes for generated video)
+    await page.evaluate(([s, f, l, w]) => window.renderStill(s, f, l, w), [shot, f, +(args.look ?? 0), args.without ? String(args.without).split(',') : []]);
     await page.screenshot({ path: path.join(out, name) });
     console.log('wrote', path.join(out, name));
   }

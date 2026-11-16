@@ -60,6 +60,9 @@
   #title-mascot { display: none; position: absolute; right: 30px; bottom: -40px; height: 380px;
                   filter: drop-shadow(0 14px 18px rgba(60,40,30,.25)); }
   #stage.title #title-mascot { display: block; }
+  figure.shot { margin: 0; border-radius: 12px; overflow: hidden; background: #f3f1ec; }
+  figure.shot img { display: block; width: 100%; height: 118px; object-fit: cover; }
+  figure.shot figcaption { font-size: 15px; padding: 6px 10px; color: var(--ink, #262a33); }
 </style>
 </head>
 <body>
@@ -230,12 +233,13 @@
 
   <div class="card" id="card-packs">
     <div class="bar"></div><h2>Tải pack model miễn phí, đừng tự dựng</h2>
-    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="tile"><div style="font-size:34px">🧍</div><h3>Nhân vật</h3><div class="muted" style="font-size:16px">có sẵn animation đi, ngồi, vẫy tay</div></div>
-      <div class="tile"><div style="font-size:34px">🪑🚗🌳</div><h3>Nội thất, xe, cây</h3><div class="muted" style="font-size:16px">hàng nghìn file GLB</div></div>
-      <div class="tile"><div style="font-size:34px">🔍</div><h3>Kiểm trước khi dùng</h3><div class="muted" style="font-size:16px">license (CC0?) · tỉ lệ (chibi vs người thật)</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <figure class="shot"><img src="assets/cards/kaykit_characters.jpg"><figcaption><b>KayKit</b> · nhân vật có sẵn animation</figcaption></figure>
+      <figure class="shot"><img src="assets/cards/kaykit_furniture.jpg"><figcaption><b>KayKit</b> · nội thất</figcaption></figure>
+      <figure class="shot"><img src="assets/cards/quaternius_people.jpg"><figcaption><b>Quaternius</b> · người tỉ lệ thật</figcaption></figure>
+      <figure class="shot"><img src="assets/cards/kenney_platformer.jpg"><figcaption><b>Kenney</b> · hàng nghìn file GLB</figcaption></figure>
     </div>
-    <div style="display:flex;gap:10px;margin-top:22px;align-items:center"><span class="muted" style="font-size:18px">Nguồn:</span><span class="pill">Kenney</span><span class="pill">KayKit</span><span class="pill">Quaternius</span></div>
+    <div class="muted" style="margin-top:12px;font-size:16px">Kiểm trước khi dùng: <b>có được dùng thương mại không</b> · <b>các nhân vật có cùng tỉ lệ không</b></div>
   </div>
 
   <div class="card" id="card-tokens">
@@ -266,6 +270,15 @@
       <span class="pill solid" style="font-size:30px;height:76px;padding:0 36px;background:#3a68b0">➕ Follow Dev xịn</span>
     </div>
     <div class="muted" style="margin-top:34px;font-size:18px">để có tiền điện cho Claude render tiếp</div>
+  </div>
+
+  <div class="card" id="card-cta3d" style="display:none;text-align:center">
+    <div class="bar" style="margin:0 auto 14px"></div><h2>Muốn dùng skill này?</h2>
+    <div style="display:flex;flex-direction:column;gap:22px;align-items:center;margin-top:34px">
+      <span class="pill solid" style="font-size:30px;height:76px;padding:0 36px;background:#3a68b0">➕ Follow Dev xịn</span>
+      <span class="pill solid" style="font-size:30px;height:76px;padding:0 36px">💬 Comment "3D"</span>
+    </div>
+    <div class="muted" style="margin-top:30px;font-size:19px">em gửi link skill dựng 3D dùng trong clip này</div>
   </div>
 
   <img id="title-mascot" src="assets/avatar_claude.png" alt="">

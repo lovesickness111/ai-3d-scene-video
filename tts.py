@@ -45,7 +45,10 @@ VOICES = {
     # male) and "Kore" (female) remixed to a northern (Hanoi) accent. The stock voices have no fixed
     # Vietnamese accent -- Riko reads southern, Kore drifts between northern and southern per call.
     'gemini': {'dev': {'voice': 'voice_8dt3hau7h3iq', 'pitch': 1.0, 'style': 'relaxed and casual, joking with a close friend'},
-               'claude': {'voice': 'voice_v9whx7m5fzs0', 'pitch': 1.0, 'style': 'playful and cheeky'}},
+               'claude': {'voice': 'voice_v9whx7m5fzs0', 'pitch': 1.0, 'style': 'playful and cheeky'},
+               # the boss (lessons clip 2): a native Vietnamese library voice (62-year-old professor) that holds a
+               # northern accent on its own, read with no style (remixes of English voices kept drifting southern)
+               'boss': {'voice': 'vi-vn-tutor-2', 'pitch': 1.0, 'style': ''}},
     # vais1000 is the only Piper vi_VN voice that knows the tone marks current espeak emits;
     # 25hours_single and vivos drop them ("Missing phoneme from id map") and speak toneless
     'piper': {'dev': {'voice': 'vi_VN-vais1000-medium', 'pitch': 1.0},
@@ -101,7 +104,8 @@ def speak_gemini(text, cfg, raw_path):
     body = {'model': os.environ['GEMINI_TTS_MODEL'],
             'input': [{'type': 'user_input', 'content': [{
                 'type': 'text', 'text': text,
-                'annotations': [{'type': 'speech_metadata', 'style': cfg['style']}]}]}],
+                # no style at all when empty: Google's guide says most turns need none, and extra text adds drift
+                **({'annotations': [{'type': 'speech_metadata', 'style': cfg['style']}]} if cfg.get('style') else {})}]}],
             'response_format': {'type': 'audio'},
             'generation_config': {'speech_config': [{'voice': cfg['voice']}]}}
     request = urllib.request.Request(
@@ -257,6 +261,8 @@ def main():
     parser.add_argument('--engine', choices=sorted(ENGINES), default='gemini')
     parser.add_argument('--voice', action='append', default=[], metavar='SPEAKER=NAME',
                         help='override a speaker\'s voice, e.g. --voice dev=vi-vn-tutor-4')
+    parser.add_argument('--style', action='append', default=[], metavar='SPEAKER=TEXT',
+                        help="override a speaker's delivery direction; empty (--style dev=) sends none")
     parser.add_argument('--claude-fx', choices=sorted(EFFECTS), default='none')
     parser.add_argument('--speed', type=float, default=DEFAULT_SPEED, help='rate every voice is sped up to, pitch kept')
     parser.add_argument('--pronunciation', default=str(ROOT/'pronunciation.json'))
@@ -274,6 +280,9 @@ def main():
     for override in args.voice:
         speaker, name = override.split('=', 1)
         voices[speaker]['voice'] = name
+    for override in args.style:
+        speaker, style = override.split('=', 1)
+        voices[speaker]['style'] = style
     audio_dir = Path(args.out).resolve()/'audio'
     raw_dir = audio_dir/'raw'  # what each engine returned, 44.1 kHz mono, by content: filters re-run from here
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -286,8 +295,12 @@ def main():
 
     for i in ([int(v) for v in args.turns.split(',')] if args.turns else range(len(turns))):
         turn = turns[i]
+        if 'insert' in turn:  # a stretch of generated video (boss walks in), no voice
+            continue
         text = spoken(turn['text'], pronunciation)
-        cfg = voices[turn['speaker']]
+        cfg = dict(voices[turn['speaker']])
+        if turn.get('style'):  # a line can ask for its own delivery ("serious, explaining to his boss")
+            cfg['style'] = turn['style']
         filters = [f"rubberband=pitch={cfg['pitch']}"] if cfg['pitch'] != 1.0 else []
         if args.speed != 1.0:
             filters.append(f'atempo={args.speed}')
@@ -315,7 +328,7 @@ def main():
             if filters:
                 command += ['-af', ','.join(filters)]
             subprocess.run(command + [str(wav_path)], check=True)
-            manifest[str(i)] = {'key': key, 'speaker': turn['speaker'], 'voice': cfg['voice'],
+            manifest[str(i)] = {'key': key, 'speaker': turn['speaker'], 'voice': cfg['voice'], 'style': cfg.get('style'),
                                 'seconds': round(seconds(wav_path), 2), 'spoken': text}
             manifest[str(i)]['cues'], manifest[str(i)]['beats'] = word_cues(turn['text'], pronunciation, wav_path)
             print(f"turn {i}: {manifest[str(i)]['seconds']}s  {spoke}")

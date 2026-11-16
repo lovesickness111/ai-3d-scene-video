@@ -57,7 +57,10 @@ nặng nhất là lính cầm súng. Bài học giữ lại:
 6. **Model có sẵn ưu tiên hơn dựng tay cho người**; mascot dạng khối thì dựng bằng primitive. Mọi pack phải
    có file LICENSE đi kèm trong thư mục tải về; kiểm license thật, không tin bảng tổng hợp
    (Quaternius pack mới là QAL, pack cũ CC0).
-7. **Không nghe được audio** → `respeak_check.py` (kiểm cách đọc: giọng Bắc, từ tiếng Anh đọc đúng và
+7. **Chọn giọng mới:** thử giọng tiếng Việt bản địa `vi-vn-*` của thư viện Gemini trước, `style` để trống, mỗi giọng đọc
+   3 lần rồi chấm (remix từ giọng tiếng Anh hay trôi về giọng Nam) — chi tiết và bảng giọng đã thử ở
+   `blender-3d-video/references/tts.md`.
+8. **Không nghe được audio** → `respeak_check.py` (kiểm cách đọc: giọng Bắc, từ tiếng Anh đọc đúng và
    nhất quán, không thiếu/thừa chữ; câu trượt thì tự đọc lại) cho mọi clip mới; **bí mật ở `.env`**; **không vượt
    firewall** (nhiều trang asset bị chặn → dùng mirror GitHub, xem `references/assets.md`).
 
@@ -91,6 +94,8 @@ Mạng công ty: chỉ `github.com`/`raw.githubusercontent.com`/`api.github.com`
 6. Mux               python make_video.py output/<run>/frames --fps 12 --out output/<run>/video_main.mp4 --voices output/<run>
 7. Thumbnail         node shoot.mjs ... --title  → thumbnail.png ; ffmpeg xfade 1 s + 0,5 s → video.mp4   (references/thumbnail.md)
 8. Soát video        trích khung từ mp4 (ffmpeg -ss) → sheet → Read; ffprobe so duration video/audio
+(Tùy) đoạn tạo sinh  người đi vào/ra phòng: khung khóa --still … --without boss → omni_clip.py (tốn phí, báo trước)
+                     → sau bước 5: splice_insert.py <run> <insert> clip.mp4   (references/pipeline.md, cuối file)
 ```
 Model GLB đặt vào cảnh qua file spec JSON (`--assets threejs/assets/<spec>.json`, mặc định `dev_casual.json`,
 `--assets none` để tắt) — cú pháp trong `references/assets.md`.
@@ -119,3 +124,5 @@ sọc bóng trên tường; chữ Việt đủ dấu; `duration` video = audio. 
 | `templates/assets/*.json` | Spec dev Quaternius đã chốt (`dev_casual.json`), ông sếp (`boss_suit.json`); spec thử KayKit + Kenney |
 | `templates/fetch_assets.py` | Tải pack từ GitHub (KayKit, mirror Quaternius, Kenney mirror, UBC/UAL) kèm license |
 | `templates/sheet.py` | Ghép PNG thành contact sheet có nhãn |
+| `omni_clip.py`, `splice_insert.py` (gốc repo) | Đoạn video Gemini Omni giữa hai khung khóa; ghép vào khung của lượt `insert` |
+| `threejs/assets/cards/` | Ảnh thật cho thẻ minh họa (ảnh mẫu KayKit, Kenney, lineup Quaternius) + `CREDITS.md` nguồn và license |

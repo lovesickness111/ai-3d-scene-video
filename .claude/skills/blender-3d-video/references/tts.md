@@ -47,11 +47,50 @@ Bẫy đã gặp: từ khóa viết tắt (`AI`) khớp không phân biệt hoa 
 ("chả ai soi" thành "chả ây ai soi"), nên từ khóa in hoa chỉ khớp khi viết hoa. `accent_check.py
 [--transcribe]` giữ lại để hỏi nhanh một clip.
 
-## Voice remix (Gemini)
+## Chọn giọng giữ được giọng Bắc (kinh nghiệm 2026-11-16)
 
-`voice_remix.py en-us-riko "Give the speaker a Northern Vietnamese (Hanoi) accent" --preview x.wav`
-→ in `voice_...` id, đưa vào `VOICES['gemini']`. `--list`, `--delete`. Preview API trả về là tiếng Anh —
-người dùng muốn **mẫu tiếng Việt**: đọc 1 câu trong kịch bản bằng voice mới rồi gửi file.
+Gemini TTS mỗi lần gọi có thể đọc ra một giọng miền khác nhau. Thứ tự nên thử:
+
+1. **Giọng tiếng Việt bản địa trong thư viện trước** (`vi-vn-*`, loại prebuilt, dùng thẳng id, không cần tạo
+   hay lưu gì): `GET /v1beta/voices?language_code=vi-VN` trả về 40 giọng. Tất cả chỉ gắn `accent: "Vietnamese"`,
+   **không ghi Bắc hay Nam**, nên phải tự thử từng giọng. Đã thử với `style` để trống, mỗi giọng 3 lần, chấm
+   bằng `reading_check`:
+
+   | Giọng | Mô tả thư viện | Bắc / 3 |
+   |---|---|---|
+   | `vi-vn-tutor-2` | nam 62 tuổi, khách quan, thẳng | **3** (sếp clip 2) |
+   | `vi-vn-tutor-6` | nam 39 tuổi, tự tin, rõ | **3** (dev clip 2) |
+   | `vi-vn-tutor-7` | nam 55 tuổi, ấm | **3** |
+   | `vi-vn-assistant-1` | nam 43 tuổi | **3** |
+   | `vi-vn-tutor-4` | nam 38 tuổi | 0 |
+   | `vi-vn-advisor-5` | nam 42 tuổi | 0 |
+   | `vi-vn-training-6` | nam 49 tuổi | 0 (cả 3 lần giọng Nam) |
+
+   Cùng nhóm `tutor` mà có giọng Bắc có giọng Nam: không suy theo tên nhóm, phải thử.
+2. **`style` để trống hoặc thật ngắn, giữ nguyên cả cuộc hội thoại.** Hướng dẫn của Google: "Avoid putting age,
+   gender, names, or permanent accent changes in `speech_metadata.style`", persona dài là "the most common cause
+   of voice drift", "extra prompt text increases drift", "most requests need no `style` instruction at all".
+   Giọng miền và tuổi để ở chính giọng, không nhét vào `style`. `tts.py` không gửi `speech_metadata` khi `style`
+   rỗng. Đổi riêng cho một clip: `--style dev=` (rỗng), `--voice dev=vi-vn-tutor-6`; truyền y nguyên hai cờ này
+   cho `respeak_check.py`, để câu đọc lại dùng đúng giọng.
+3. **Remix chỉ giữ được giọng miền của giọng gốc** (tài liệu: "Relative remix prompts preserve the baseline
+   language and regional accent of the `base_voice`"). Remix từ giọng tiếng Anh (Orus, Charon, Algenib) với chỉ
+   dẫn "giọng Hà Nội + già + uy" thì 9 lần đọc có 8 lần trượt Nam. Remix lần hai để "ép" giọng Hà Nội (OrusHanoi)
+   qua 3/3 lúc có `style`, nhưng bỏ `style` thì 0/3. Remix từ một giọng **đã là giọng Bắc** (giọng dev) thì giữ được
+   3/3. Muốn remix thì lấy gốc là giọng `vi-vn-*` giọng Bắc, mỗi lần chỉ đổi một hai đặc điểm (tuổi, độ trầm).
+4. Muốn chắc nhất thì có **Voice replication**: nhân bản giọng từ đoạn ghi âm 10–30 s của một người thật nói
+   giọng Hà Nội, kèm câu đồng ý đọc bằng tiếng Việt (`vi-VN` được hỗ trợ). Cần người nói thật và sự đồng ý của họ.
+5. Một câu trượt mãi dù đã đổi giọng thì sửa câu chữ, đừng cố đọc lại thêm. Đã gặp: "Được. Còn nhân vật với đồ
+   đạc… thì sao?" trượt 10 lần, viết thành "Ừ. Thế còn nhân vật với đồ đạc…?" thì qua ngay lần đầu.
+
+Model `gemini-3.8-flash-tts` (đang dùng) là model Google khuyên cho phương ngữ vùng miền.
+
+### `voice_remix.py`
+
+`voice_remix.py <base> "<chỉ dẫn>" --preview x.wav` trả về id `voice_...`, đưa vào `VOICES['gemini']`. Có thêm
+`--list`, `--delete`. Base có thể là id thư viện (`vi-vn-tutor-2`), tên prebuilt hoặc một `voice_...` đã tạo.
+Preview API trả về là tiếng Anh, mà người dùng muốn **mẫu tiếng Việt**: đọc 1 câu trong kịch bản bằng giọng mới rồi
+gửi file. Giọng remix nào không dùng thì xóa (`--delete`); xóa giọng gốc không ảnh hưởng giọng đã remix từ nó.
 
 ## Quy tắc với người dùng
 

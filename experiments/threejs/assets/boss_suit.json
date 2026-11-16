@@ -18,11 +18,12 @@
     },
     "face": {
       "anchorUp": 0.1,
-      "mouthFwd": 0.114,
+      "mouthFwd": 0.115,
       "mouthUp": 0.03,
-      "mouthSide": -0.015,
-      "mouthW": 0.028,
-      "mouthH": 0.008
+      "mouthSide": 0,
+      "mouthW": 0.036,
+      "mouthH": 0.008,
+      "mouthFold": 30
     },
     "ik": {
       "Hand.R": {

@@ -1,0 +1,197 @@
+[
+  {
+    "file": "quaternius/ModularMen_Casual.glb",
+    "role": "dev",
+    "replaceDev": true,
+    "asIs": true,
+    "loc": [
+      -0.15,
+      -0.6,
+      0
+    ],
+    "yaw": 188,
+    "offset": [
+      0,
+      0,
+      -0.42
+    ],
+    "pose": {
+      "Abdomen": [
+        8,
+        0,
+        0
+      ],
+      "Head": [
+        -12,
+        -35,
+        0
+      ],
+      "UpperLeg.L": [
+        [
+          "side",
+          85
+        ]
+      ],
+      "UpperLeg.R": [
+        [
+          "side",
+          85
+        ]
+      ],
+      "LowerLeg.L": [
+        [
+          "side",
+          -85
+        ]
+      ],
+      "LowerLeg.R": [
+        [
+          "side",
+          -85
+        ]
+      ],
+      "Neck": [
+        [
+          "up",
+          -25
+        ]
+      ]
+    },
+    "face": {
+      "anchorUp": 0.1,
+      "mouthFwd": 0.114,
+      "mouthUp": 0.03,
+      "mouthSide": 0,
+      "anchorYaw": -54,
+      "mouthW": 0.028,
+      "mouthH": 0.008
+    },
+    "ik": {
+      "Hand.R": {
+        "at": [
+          -0.0807,
+          -0.1443,
+          0.79
+        ],
+        "pole": [
+          0.6,
+          -1,
+          -1
+        ],
+        "fingers": [
+          -0.0982,
+          -0.0559,
+          0.775
+        ],
+        "finger": "Index2.R",
+        "thumb": "Thumb2.R",
+        "thumbTo": [
+          -1,
+          0,
+          0
+        ]
+      },
+      "Hand.L": {
+        "at": [
+          -0.2887,
+          -0.1735,
+          0.79
+        ],
+        "pole": [
+          -0.6,
+          -1,
+          -1
+        ],
+        "fingers": [
+          -0.2962,
+          -0.0837,
+          0.775
+        ],
+        "finger": "Index2.L",
+        "thumb": "Thumb2.L",
+        "thumbTo": [
+          1,
+          0,
+          0
+        ]
+      }
+    }
+  },
+  {
+    "file": "quaternius/ModularMen_Suit.glb",
+    "role": "boss",
+    "asIs": true,
+    "loc": [
+      -1.0,
+      -0.42,
+      0
+    ],
+    "yaw": 80,
+    "pose": {
+      "Head": [
+        -14,
+        0,
+        0
+      ]
+    },
+    "face": {
+      "anchorUp": 0.1,
+      "mouthFwd": 0.115,
+      "mouthUp": 0.03,
+      "mouthSide": 0,
+      "mouthW": 0.036,
+      "mouthH": 0.008,
+      "mouthFold": 30
+    },
+    "ik": {
+      "Hand.R": {
+        "to": [
+          0.17,
+          0.08,
+          1.1
+        ],
+        "pole": [
+          2,
+          -1.5,
+          0
+        ],
+        "fingersTo": [
+          0.16,
+          0.1,
+          0.9700000000000001
+        ],
+        "finger": "Index2.R",
+        "thumb": "Thumb2.R",
+        "thumbTo": [
+          0,
+          1,
+          0
+        ]
+      },
+      "Hand.L": {
+        "to": [
+          -0.17,
+          0.08,
+          1.1
+        ],
+        "pole": [
+          -2,
+          -1.5,
+          0
+        ],
+        "fingersTo": [
+          -0.16,
+          0.1,
+          0.9700000000000001
+        ],
+        "finger": "Index2.L",
+        "thumb": "Thumb2.L",
+        "thumbTo": [
+          0,
+          1,
+          0
+        ]
+      }
+    }
+  }
+]

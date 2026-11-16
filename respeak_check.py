@@ -26,13 +26,15 @@ def main():
     ap.add_argument('--turns', default='', help='comma-separated turn indices (default: all)')
     ap.add_argument('--tries', type=int, default=4)
     ap.add_argument('--engine', default='gemini')
+    ap.add_argument('--voice', action='append', default=[], metavar='SPEAKER=NAME', help='passed on to tts.py')
+    ap.add_argument('--style', action='append', default=[], metavar='SPEAKER=TEXT', help='passed on to tts.py')
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     load_env()
     py, audio = sys.executable, Path(args.run)/'audio'
     script = json.loads(Path(args.conversation).read_text(encoding='utf-8'))
     pronunciation = load_pronunciation(ROOT/'pronunciation.json')
-    turns = [int(v) for v in args.turns.split(',')] if args.turns else range(len(script))
+    turns = [int(v) for v in args.turns.split(',')] if args.turns else [i for i, t in enumerate(script) if 'insert' not in t]
     failed = []
     for t in turns:
         for attempt in range(1, args.tries+1):
@@ -47,10 +49,11 @@ def main():
                 break
             m = json.loads((audio/'audio.json').read_text(encoding='utf-8'))[str(t)]
             cfg = VOICES[args.engine][m['speaker']]
-            raw_key = hashlib.sha1(json.dumps([args.engine, cfg['voice'], cfg.get('style'), m['spoken']]).encode()).hexdigest()
+            raw_key = hashlib.sha1(json.dumps([args.engine, m.get('voice', cfg['voice']), m.get('style', cfg.get('style')), m['spoken']]).encode()).hexdigest()
             for p in (audio/f'turn_{t:02d}.wav', audio/'raw'/f'{raw_key}.wav'):
                 p.unlink(missing_ok=True)
-            subprocess.run([py, 'tts.py', args.conversation, '--out', args.run, '--turns', str(t), '--engine', args.engine],
+            extra = [x for v in args.voice for x in ('--voice', v)] + [x for s in args.style for x in ('--style', s)]
+            subprocess.run([py, 'tts.py', args.conversation, '--out', args.run, '--turns', str(t), '--engine', args.engine] + extra,
                            check=True, capture_output=True)
     if failed:
         print('still failing:', failed)

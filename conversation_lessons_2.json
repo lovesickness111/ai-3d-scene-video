@@ -1,87 +1,90 @@
 [
   {
-    "speaker": "dev",
-    "text": "Ê Claude, dựng video 3D bằng AI mà tao thấy nhiều người than tốn tiền render, ngồi chờ cả buổi. Có mẹo gì không?"
+    "insert": "boss_enter",
+    "seconds": 2,
+    "shot": "boss_dev",
+    "clip_start": 1.5
   },
   {
-    "speaker": "claude",
-    "text": "Có hẳn **8 best practice**, tao học bằng tiền điện của mày đấy. Số một: **render thử trước, render full sau**. Tao chụp thử ba khung, vài chục giây là xong, nhân vật mà bị cắt đầu thì thấy ngay. Render cả video mất cả chục phút, đến lúc đấy mới thấy thì muộn rồi."
-  },
-  {
-    "speaker": "dev",
-    "text": "Tao mà chờ chục phút rồi thấy mất đầu là tao tắt máy mày luôn. Còn gì nữa?"
-  },
-  {
-    "speaker": "claude",
-    "text": "Còn nhiều. Mày nhìn lên danh sách này đã."
-  },
-  {
-    "speaker": "claude",
-    "text": "Số hai, chạy cái gì lâu thì **báo trước tốn bao lâu**, mày gật thì tao mới chạy. Số ba, **làm giọng đọc trước**, giọng dài bao nhiêu thì dựng cảnh dài bấy nhiêu, miệng mới khớp lời. Số bốn, **chữ với bảng số để layer riêng**, sai một chữ thì sửa chữ, khỏi render lại cảnh. Số năm, mày chê câu nào thì tao **ghi thành rule** vào file skill, lần sau khỏi phải nhắc.",
-    "illustration": "rules"
+    "speaker": "boss",
+    "text": "Anh thấy em đang dùng AI để dựng video, mà sao anh xem hóa đơn thấy tiền tốn quá. Em xem phân tích cho anh."
   },
   {
     "speaker": "dev",
-    "text": "Mới năm. Còn ba cái nữa đâu?"
-  },
-  {
-    "speaker": "claude",
-    "text": "Số sáu tiết kiệm nhất: **đừng bắt tao tự nặn nhân vật**. Tao dựng người bằng khối hộp thì ra con robot bị ốm."
+    "text": "Dạ, em xem rồi ạ. Tiền mất chủ yếu ở hai chỗ: render đi render lại, và AI phải xem rất nhiều ảnh để soát lỗi. Em có **8 cách** để cắt, anh xem danh sách này ạ."
   },
   {
     "speaker": "dev",
-    "text": "Haha. Thế lấy nhân vật ở đâu?"
+    "illustration": "rules",
+    "text": "Trước giờ em **render cả video rồi mới xem**, sai một chỗ là mất mười mấy phút làm lại. Giờ em **chụp thử vài khung**, thấy đúng rồi mới render hết. Việc gì chạy lâu thì em **báo anh trước** mất bao lâu, tốn bao nhiêu."
   },
   {
-    "speaker": "claude",
-    "text": "Bảo tao **tải pack model miễn phí**. Mày nhìn lên đây."
-  },
-  {
-    "speaker": "claude",
-    "text": "Kenney, KayKit, Quaternius có cả nghìn file GLB, từ nhân vật, bàn ghế đến xe cộ, cây cối, nhiều bộ có sẵn cả dáng đi, dáng ngồi. Mày bảo kiếm một ông nhân viên văn phòng là tao tải về đặt vào cảnh. Có điều phải **đọc license**: bộ cũ của Quaternius là CC0, bộ mới thì không. Rồi xem **tỉ lệ**, nhân vật đầu to kiểu chibi mà đứng cạnh người thật là lệch tông ngay.",
-    "illustration": "packs"
+    "speaker": "boss",
+    "text": "Hợp lý. Còn gì nữa?"
   },
   {
     "speaker": "dev",
-    "text": "Nghe như đi chợ đồ chơi. Mà mỗi lần mày xem ảnh render có tốn token không?"
+    "illustration": "rules",
+    "text": "Em **làm giọng đọc trước**, rồi dựng cảnh theo độ dài giọng, sửa lời thì khỏi dựng lại. **Chữ với bảng số** em để riêng một lớp, sai chữ thì sửa chữ thôi. Anh góp ý gì, em **ghi luôn vào file hướng dẫn** cho AI, lần sau nó tự làm đúng."
   },
   {
-    "speaker": "claude",
-    "text": "Tốn, **ảnh ngốn token nhất**. Nên số bảy là tiết kiệm token. Mày xem này."
-  },
-  {
-    "speaker": "claude",
-    "text": "Mười hai khung thì tao ghép thành **một tấm contact sheet**, xem một lần thay vì mười hai lần. Chụp thử thì để **độ phân giải thấp**. Log cả nghìn dòng thì **lọc lấy dòng lỗi** mà đọc. Việc lặp đi lặp lại thì giao **model nhỏ**, Haiku rẻ hơn Opus cỡ bốn mươi lần.",
-    "illustration": "tokens"
+    "speaker": "boss",
+    "text": "Ừ. Thế còn nhân vật với đồ đạc trong cảnh? Thuê người dựng model thì tốn lắm."
   },
   {
     "speaker": "dev",
-    "text": "Mày bảo việc lặp thì giao model nhỏ. Thế lúc nào cần model xịn, lúc nào model vừa là đủ?"
-  },
-  {
-    "speaker": "claude",
-    "text": "Đấy là số tám: **đúng model, đúng việc**. Mày nhìn bảng này."
-  },
-  {
-    "speaker": "claude",
-    "text": "Việc cần **nghĩ** thì dùng model xịn như **Opus 5.5**, bí quá thì gọi **Fable 5.1**: viết kịch bản, nghĩ cảnh mới, chỉnh tư thế nhân vật, gỡ lỗi khi pipeline hỏng. Việc **làm theo quy trình có sẵn** như làm giọng, render, ghép video thì **Sonnet 5.5** là đủ. Còn hỏi có hay không hàng loạt thì để **Haiku 5.5**. Skill viết càng kỹ thì càng dùng được model rẻ.",
-    "illustration": "models"
+    "text": "Cái đó không cần thuê ạ, anh xem này."
   },
   {
     "speaker": "dev",
-    "text": "Ok. Thế tao còn phải làm gì?"
+    "illustration": "packs",
+    "text": "Trên mạng có sẵn **hàng nghìn model miễn phí**, từ nhân vật, bàn ghế đến cây cối, có bộ còn làm sẵn cả dáng đi, dáng ngồi. Em chỉ kiểm hai thứ: **có được dùng cho video thương mại không**, và **các nhân vật có cùng tỉ lệ không**, kẻo người đầu to lại đứng cạnh người thật."
   },
   {
-    "speaker": "claude",
-    "text": "Việc quan trọng nhất: **chê**. Mày bảo \"bong bóng nhảy xấu lắm\", \"mu bàn tay úp xuống phím rồi kìa\", thế là tao sửa. Tao tự xem ảnh thì toàn bỏ sót mấy lỗi đấy."
+    "speaker": "boss",
+    "text": "Còn tiền AI? Hóa đơn tháng này cũng tăng."
   },
   {
     "speaker": "dev",
-    "text": "Được, tao chê luôn: clip này hơi dài. Mà mọi người xem đến đây rồi thì **like với follow Dev xịn** nhé, để tao có tiền điện cho nó render tiếp.",
-    "illustration": "cta"
+    "text": "Phần lớn là do AI phải xem ảnh, mỗi lần soát lỗi là một lần xem. Em có cách giảm, anh xem ạ."
   },
   {
-    "speaker": "claude",
-    "text": "Follow rồi tao mới chịu nghe chê. Xác suất: **100%**."
+    "speaker": "dev",
+    "illustration": "tokens",
+    "text": "Thay vì cho AI xem mười hai ảnh, em **ghép thành một tấm**, nó xem một lần. Ảnh chụp thử thì **để nhỏ** thôi. Log dài cả nghìn dòng thì em **lọc ra dòng lỗi** rồi mới đưa nó. Việc lặt vặt lặp đi lặp lại thì **giao model rẻ**, rẻ hơn cỡ bốn mươi lần."
+  },
+  {
+    "speaker": "boss",
+    "text": "Vậy có cần lúc nào cũng dùng loại AI đắt nhất không?"
+  },
+  {
+    "speaker": "dev",
+    "text": "Không ạ, việc nào dùng loại nấy. Anh xem bảng này."
+  },
+  {
+    "speaker": "dev",
+    "illustration": "models",
+    "text": "Việc cần **nghĩ** như viết kịch bản, dựng cảnh mới hay gỡ lỗi khó thì dùng loại mạnh nhất là **Opus**, hoặc **Fable**. Việc **làm theo quy trình có sẵn** thì **Sonnet** là đủ. Còn kiểm đúng sai hàng loạt thì để **Haiku**, rẻ nhất. Quy trình em viết càng kỹ thì càng dùng được loại rẻ."
+  },
+  {
+    "speaker": "boss",
+    "text": "Rõ rồi. Em viết những cái này thành quy trình chung cho cả team. Tháng sau anh muốn thấy chi phí giảm."
+  },
+  {
+    "speaker": "dev",
+    "text": "Dạ, trong tuần này em gửi anh ạ."
+  },
+  {
+    "insert": "boss_exit",
+    "seconds": 6,
+    "shot": "boss_dev"
+  },
+  {
+    "speaker": "dev",
+    "illustration": "cta3d",
+    "absent": [
+      "boss"
+    ],
+    "text": "Mọi người muốn dùng skill dựng 3D trong clip này thì **follow** em và **comment \"3D\"**, em gửi link ạ."
   }
 ]

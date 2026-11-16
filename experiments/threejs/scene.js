@@ -279,10 +279,18 @@ const SHOTS = {  // qa_scene.py SHOTS
               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
   dev_top: { anchor: dev.head, camera: { offset: [0, -.01, .15], lens: 30, dist: 1.2, side: [-.45, -.35, 1], low: -.2 },  // stills: over the shoulder, onto the keys
              bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  // the dev talking to the boss: he faces the boss, so the camera comes from the boss's side of the desk
+  // (bubble.screen: [right, up, towards the camera] in metres from the anchor, the bubble turned to face the camera)
+  devb_talk: { anchor: dev.head, camera: { offset: [0, -.01, .15], lens: 35, dist: 1.35, side: [-.85, -.35, .3] },
+               bubble: { loc: [0, 0, 0], screen: [.3, .14, .1], scale: 1.7 } },
+  devb_explain: { anchor: dev.head, camera: { offset: [0, -.01, .15], lens: 35, dist: 1.7, side: [-.85, -.35, .3], low: .12, aside: .25 },
+                  bubble: { loc: [0, 0, 0], screen: [.05, .42, .1], scale: 1.7 }, card: [.47, .1, .97, .82] },
   // the boss (assets/boss_suit.json, role "boss"): anchored to his head at init; claude.face only holds the place
   boss_talk: { anchor: claude.face, camera: { lens: 38, dist: 2.0, side: [.8, -.55, .25], low: -.04 },
-               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+               bubble: { loc: [0, 0, 0], screen: [.4, .08, .1], scale: 1.75 } },
   boss_dev: { anchor: claude.face, camera: { lens: 30, dist: 2.8, side: [.7, -1, .35], low: -.12, aside: .12 },  // both of them at the desk
+              bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
+  boss_face: { anchor: claude.face, camera: { lens: 70, dist: .7, side: [.985, -.17, .05], low: -.1 },  // stills: the boss's glued mouth, face on (--without dev)
               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
   boss_body: { anchor: claude.face, camera: { lens: 35, dist: 2.4, side: [.55, -.85, .1], low: -.32 },  // stills: the boss head to toe
               bubble: { loc: [.46, -.05, .25], scale: 1.9 } },
@@ -335,7 +343,8 @@ function screenBox(obj) {  // pixel bbox of obj's bounding box as the camera see
 }
 
 // ---- faces and bodies ----
-const SPEAKER = { dev: { accent: '#3a68b0', tint: '#d8e4f5' }, claude: { accent: '#c95e34', tint: '#fbe2d3' } };
+const SPEAKER = { dev: { accent: '#3a68b0', tint: '#d8e4f5' }, claude: { accent: '#c95e34', tint: '#fbe2d3' },
+                  boss: { accent: '#3d4a5c', tint: '#dfe4ea' } };
 const POSE = {  // qa_scene.py FACE_POSES (Blender scale order); the first pose of a part is its rest
   dev: { mouth: { closed: {}, half: { scale: [.92, 1, 1.6], lift: -.006 }, open: { scale: [.85, 1, 2.2], lift: -.012 } },
          eyes: { rest: {}, blink: { scale: [1.1, 1, .15] } }, brows: { rest: {}, up: { lift: .012 } } },
@@ -344,7 +353,7 @@ const POSE = {  // qa_scene.py FACE_POSES (Blender scale order); the first pose 
   dev_rigged: { mouth: { closed: { scale: [1.15, 1, .28] }, half: {}, open: { scale: [1, 1, 1.6] } },  // flat oval in face axes: [width, -, height]
                 eyes: { rest: {} }, brows: { rest: {} } },
 };
-const EMPHASIS = { dev: ['brows', 'up'], claude: ['eyes', 'wide'] };
+const EMPHASIS = { dev: ['brows', 'up'], claude: ['eyes', 'wide'], boss: ['brows', 'up'] };
 const ENERGY = { closed: .25, half: .7, open: 1 };
 
 function pose(part, { scale = [1, 1, 1], lift = 0, hidden = false }) {
@@ -355,7 +364,8 @@ function pose(part, { scale = [1, 1, 1], lift = 0, hidden = false }) {
   part.visible = !hidden;
 }
 const parts = (who) => ({ mouth: [CHAR[who].mouth].flat(), eyes: CHAR[who].eyes, brows: CHAR[who].brows || [] });
-const posesOf = (who) => POSE[who === 'dev' && CHAR.dev.rigged ? 'dev_rigged' : who];
+const posesOf = (who) => POSE[(who === 'dev' || who === 'boss') && CHAR[who].rigged ? 'dev_rigged' : who];
+const speakers = () => ['dev', 'claude', ...(CHAR.boss ? ['boss'] : [])];
 
 // Body language: idle breathing/sway for everyone; while speaking, gestures scaled by how loud
 // the voice is at that moment (`energy`). All sines of the frame number, so deterministic.
@@ -388,6 +398,12 @@ function animateBodies(f, fps, energy, emph = {}, look = 0) {
   dev.knees[0].rotation.x = .015 * s(4.1);
   }
 
+  if (CHAR.boss && CHAR.boss.rigged) {  // the boss stands, hands in pockets: only his head talks
+    const b = CHAR.boss.bones, eb = energy.boss || 0;
+    for (const x of Object.values(b)) x.rotation.copy(x.userData.base);
+    b.Head.rotation.x += .03 * s(2.4, 1) * (.3 + eb) + (emph.boss ? -.07 : 0);
+    b.Head.rotation.y += .04 * s(3.9, 2) * (.3 + eb);
+  }
   const bob = c * Math.abs(s(.55)) * .012 + .003 * s(2.4);
   claude.body.position.y = bob;
   const squash = 1 + .05 * c * s(.55);
@@ -562,9 +578,16 @@ function riggedCharacter(root, g, a) {
   const faceQ = turn.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), deg(a.yaw || 0)));
   holder.quaternion.copy(headQ.clone().invert().multiply(faceQ));
   holder.scale.set(1, 1, 1).divide(bones.Head.getWorldScale(new THREE.Vector3()));
-  const mouth = new THREE.Mesh(new THREE.CircleGeometry(.5, 32), M.mouthFlat);
-  mouth.scale.set(face.mouthW ?? .026, face.mouthH ?? .009, 1);  // metres: the "half" pose; closed / open scale it
-  holder.add(mouth);
+  // two half-ovals, each turned back by `mouthFold` degrees about the face's centre line: a low-poly face is a V
+  // (ridge in the middle, cheeks slanting away), and a flat oval sinks into the ridge or sticks out over the cheeks
+  const mouth = new THREE.Group(), fold = deg(face.mouthFold ?? 0), w = face.mouthW ?? .026, h = face.mouthH ?? .009;
+  for (const s of [-1, 1]) {
+    const g = new THREE.CircleGeometry(.5, 24, s > 0 ? -Math.PI / 2 : Math.PI / 2, Math.PI).scale(w, h, 1);  // metres: the "half" pose
+    const half = new THREE.Mesh(g, M.mouthFlat);
+    half.rotation.y = s * fold;
+    mouth.add(half);
+  }
+  holder.add(mouth);  // closed / open scale the group
   CHAR[a.role] = { rigged: true, root: g, head: anchor, mouth: [mouth], eyes: [], brows: [], bones, headRest: a.headRest };
 }
 
@@ -642,27 +665,36 @@ function layoutTurn(turn) {
 window.init = function (timeline) {
   T = timeline;
   if (CHAR.dev.rigged) {  // the dev shots hang from the character's head anchor instead of the built head
-    for (const name of ['dev_talk', 'dev_explain', 'dev_side', 'dev_top', 'dev_hands', 'dev_face']) {
+    for (const name of ['dev_talk', 'dev_explain', 'devb_talk', 'devb_explain', 'dev_side', 'dev_top', 'dev_hands', 'dev_face']) {
       SHOTS[name].anchor = CHAR.dev.head;
       SHOTS[name].camera.offset = [0, 0, 0];
       CHAR.dev.head.add(SHOTS[name].bubbleObj.root);
     }
   }
-  if (CHAR.boss) for (const name of ['boss_talk', 'boss_dev', 'boss_body', 'boss_hips', 'boss_hipsL', 'boss_front']) {
+  if (CHAR.boss) for (const name of ['boss_talk', 'boss_dev', 'boss_body', 'boss_hips', 'boss_hipsL', 'boss_front', 'boss_face']) {
     SHOTS[name].anchor = CHAR.boss.head;
     CHAR.boss.head.add(SHOTS[name].bubbleObj.root);
   }
   animateBodies(0, T.fps, { dev: 0, claude: 0 });
-  for (const who of ['dev', 'claude']) for (const [part, objs] of Object.entries(parts(who))) for (const o of objs) pose(o, Object.values(posesOf(who)[part])[0]);
+  for (const who of speakers()) for (const [part, objs] of Object.entries(parts(who))) for (const o of objs) pose(o, Object.values(posesOf(who)[part])[0]);
   scene.updateMatrixWorld(true);
   for (const [name, shot] of Object.entries(SHOTS)) {
     shotFace(camera, shot.anchor, shot.camera);
     shotCams[name] = { pos: camera.position.clone(), quat: camera.quaternion.clone(), fov: camera.fov };
   }
+  for (const shot of Object.values(SHOTS)) if (shot.bubble.screen) {  // bubbles placed and turned by their camera
+    shotFace(camera, shot.anchor, shot.camera);
+    const [r, u, t] = shot.bubble.screen, q = camera.quaternion;
+    const at = shot.anchor.getWorldPosition(new THREE.Vector3()).addScaledVector(new THREE.Vector3(1, 0, 0).applyQuaternion(q), r)
+      .addScaledVector(new THREE.Vector3(0, 1, 0).applyQuaternion(q), u).addScaledVector(new THREE.Vector3(0, 0, 1).applyQuaternion(q), t);
+    shot.bubbleObj.root.position.copy(shot.anchor.worldToLocal(at));
+    shot.bubbleObj.root.lookAt(camera.position);
+  }
   for (const turn of T.turns) {
     const shot = SHOTS[turn.shot];
     shotFace(camera, shot.anchor, shot.camera);
     turn.box = screenBox(shot.bubbleObj.body);
+    if (turn.insert) { turn.beatFrames = []; continue; }  // generated video goes here: no words, no card
     turn.layout = layoutTurn(turn);
     turn.beatFrames = (turn.beats || [0]).map(b => turn.voice_frame + Math.round(b * T.fps));
     if (shot.card) turn.cardEl = document.getElementById(`card-${turn.illustration}`);
@@ -677,13 +709,16 @@ let shownChunk = null;
 window.renderFrame = function (f) {
   const turn = placeCamera(f);
   const fps = T.fps;
-  const speaking = f >= turn.voice_frame && f <= turn.frame_end ? turn : null;
+  const speaking = !turn.insert && f >= turn.voice_frame && f <= turn.frame_end ? turn : null;
+  // who is in the room: a turn can send the boss out (`absent`); he is in from his entrance on otherwise
+  const bossIn = t => !!CHAR.boss && !!t && !(t.absent || []).includes('boss');
+  if (CHAR.boss) CHAR.boss.root.visible = bossIn(turn);
   const k = speaking ? f - turn.voice_frame : -1;
   const level = speaking ? (turn.mouth[k] || 'closed') : 'closed';
 
   // faces: mouth follows the voice; emphasis for 4 frames from each sentence start; a blink in the pause before it
-  const energy = { dev: 0, claude: 0 }, emphasis = {};
-  for (const who of ['dev', 'claude']) {
+  const energy = { dev: 0, claude: 0, boss: 0 }, emphasis = {};
+  for (const who of speakers()) {
     const P = parts(who);
     const mine = speaking && turn.speaker === who;
     for (const o of P.mouth) pose(o, posesOf(who).mouth[mine ? level : 'closed']);
@@ -694,7 +729,7 @@ window.renderFrame = function (f) {
         if (f >= bf && f < bf + 4 && bf < turn.frame_end) emph = true;
         if (bf !== turn.beatFrames[0] && f === bf - 2 && (turn.mouth[f - turn.voice_frame] || 'closed') === 'closed') eyes = 'blink';
       }
-    } else if ((f + (who === 'dev' ? 17 : 41)) % Math.round(fps * 3.3) === 0) eyes = 'blink';  // the listener blinks now and then
+    } else if ((f + ({ dev: 17, claude: 41, boss: 29 })[who]) % Math.round(fps * 3.3) === 0) eyes = 'blink';  // the listener blinks now and then
     emphasis[who] = emph;
     for (const o of P.eyes) pose(o, posesOf(who).eyes[eyes]);
     for (const o of P[ePart]) if (ePart !== 'eyes' || eyes === 'rest') pose(o, posesOf(who)[ePart][emph ? ePose : Object.keys(posesOf(who)[ePart])[0]]);
@@ -705,8 +740,8 @@ window.renderFrame = function (f) {
     }
   }
   for (const a of assets) if (a.mixer) a.mixer.setTime(f / fps);  // clip time from the frame number: deterministic
-  // the dev turns to the boss while the boss speaks, easing over the camera move into and out of that turn
-  const ti = T.turns.indexOf(turn), lookOf = t => t && t.speaker === 'boss' ? 1 : 0;
+  // the dev faces the boss while the boss is in the room (or speaks), easing over the camera move between turns
+  const ti = T.turns.indexOf(turn), lookOf = t => bossIn(t) || (t && t.speaker === 'boss') ? 1 : 0;
   let look = lookOf(turn);
   if (f < turn.voice_frame && ti > 0) {
     const t = easeInOut((f - (turn.frame_start - 1)) / (turn.voice_frame - (turn.frame_start - 1)));
@@ -721,7 +756,7 @@ window.renderFrame = function (f) {
   const ms = performance.now() - t0;
 
   // speech text: the chunk on screen is the last one whose first word has been spoken
-  const sp = SPEAKER[turn.speaker];
+  const sp = SPEAKER[turn.speaker] || SPEAKER.dev;
   document.documentElement.style.setProperty('--accent', sp.accent);
   document.documentElement.style.setProperty('--tint', sp.tint);
   if (speaking) {
@@ -761,7 +796,32 @@ window.renderFrame = function (f) {
   }
   return { ms };
 };
-window.renderStill = function (shot, f = 1, look = 0) {  // one frame of a named shot with everyone at rest, no bubble or card
+window.tuneShots = function (cfg) {  // --shots '{"devb_talk": {"camera": {...}, "bubble": {...}, "card": [...]}}': try framings without editing
+  for (const [name, c] of Object.entries(cfg)) {
+    const shot = SHOTS[name];
+    Object.assign(shot.camera, c.camera || {});
+    Object.assign(shot.bubble, c.bubble || {});
+    if (c.card) shot.card = c.card;
+    shot.bubbleObj.root.position.copy(v3(shot.bubble.loc));
+    shot.bubbleObj.root.scale.setScalar(shot.bubble.scale);
+  }
+};
+window.closeRoom = function () {  // a right-hand wall (x 2.6) for cameras that look across the room, e.g. at the dev facing the boss
+  box([.1, 10, 4], [2.6, 0, 2], M.wall);
+  box([.02, 10, .12], [2.54, 0, .06], M.trim);
+  painting([2.54, -.4, 1.3], -90, [.55, .7], SUNSET);
+  // a soft fill from the boss's side: the dev turned to him faces away from the key light
+  const fill = new THREE.SpotLight(new THREE.Color(1, .93, .85), 9, 0, deg(40), .7, 1.2);
+  fill.position.copy(v3([-1.3, -1.9, 2.0]));
+  fill.target.position.copy(v3([-.15, -.6, 1.15]));
+  scene.add(fill, fill.target);
+};
+window.hide = function (names) {  // leave characters out of this video, e.g. the mascot when the boss visits
+  for (const n of names) if (n === 'claude') claude.root.visible = false; else if (CHAR[n] && CHAR[n].root) CHAR[n].root.visible = false;
+};
+window.renderStill = function (shot, f = 1, look = 0, without = []) {  // one frame of a named shot with everyone at rest, no bubble or card
+  if (CHAR.boss) CHAR.boss.root.visible = !without.includes('boss');
+  if (CHAR.dev.root) CHAR.dev.root.visible = dev.root.visible = !without.includes('dev');  // e.g. to see the boss's face
   for (const s of Object.values(SHOTS)) s.bubbleObj.root.visible = false;
   for (const el of document.querySelectorAll('.card')) el.style.display = 'none';
   bubbleEl.style.display = 'none';

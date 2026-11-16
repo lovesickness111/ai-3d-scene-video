@@ -36,6 +36,11 @@ yên, mặt quay khoảng 60° sang mascot, miệng phẳng tối màu giữa m�
    - Vị trí đo trên đầu chưa pose rồi xoay theo góc pose của xương Head (`a.headRest`), nên quay hay cúi đầu
      không làm miệng lệch.
    - Dáng `POSE.dev_rigged`: closed `[1.15, 1, .28]` (một nét), half (nghỉ), open `[1, 1, 1.6]` (bầu dục bè ngang).
+   - **`mouthFold`** (độ, mặc định 0): miệng là hai nửa bầu dục, mỗi nửa nghiêng vào theo một bên má quanh đường
+     giữa mặt. Mặt dev khá phẳng nên để 0. Mặt sếp (Suit) là chữ V, có sống giữa và má vát, nên miệng phẳng
+     hoặc chìm vào sống (ở 0,110 chỉ còn một chấm), hoặc nhô ra trước má. Nhìn ¾ thì thấy lệch sang má xa và
+     méo khi há (người dùng: "miệng ông sếp méo quá"). Sếp chốt `mouthFwd 0,115, mouthW 0,036, mouthFold 30`.
+     Soát bằng chuỗi khung lúc nhân vật nói (crop mặt ở góc ¾) và `--still boss_face --without dev` (chính diện).
 7. **Cử động** (`animateBodies`, nhánh `CHAR.dev.rigged`): mỗi khung reset xương về `userData.base` rồi chỉ cộng
    đầu gật/nghiêng × (0,3 + energy), gật −0,09 rad ở đầu mỗi câu, gối phải gõ nhịp khi nói. Tay và ngực **không
    động**: ngực thở cũng kéo tay theo.
@@ -87,9 +92,13 @@ và đầu 75° quanh trục đứng (`turnAboutUp`). Không xoay ngực, vì ng
 `renderFrame` đặt `look = 1` cho lượt có `speaker: "boss"` và chuyển mượt trong lúc camera lia. Soát bằng
 `shoot.mjs --look 1 --still dev_talk,dev_hands`.
 
-Chưa làm: lịch nói cho speaker `boss` (`SPEAKER`, `POSE`, giọng trong `tts.py`, cử chỉ trong `animateBodies`),
-và chỉnh lại `dev_talk` khi có sếp (từ góc đó sếp đứng ngay sau đầu dev). Đứng sát sau ghế thì tay giải thích
-trông như sắp cốc đầu dev, nên đặt sếp ra cạnh đầu bàn.
+**Sếp nói được** (clip bài học 2, 2026-11-16): speaker `boss` trong `SPEAKER` (màu xám xanh), miệng phẳng dùng
+chung dáng `dev_rigged`, đầu gật theo câu (`animateBodies`, `energy.boss`), tay đút túi đứng yên. Giọng trong
+`tts.py` (`VOICES.gemini.boss`, xem memory về giọng). Shot `boss_talk` (bong bóng đặt theo camera, `bubble.screen`).
+Clip có sếp thì: `--assets assets/dev_boss.json --hide claude --room closed`, dev nói với sếp dùng `devb_talk` /
+`devb_explain` (camera từ phía sếp, vì dev quay mặt sang sếp, góc `dev_talk` cũ chỉ thấy gáy), có đèn phụ phía
+sếp vì mặt dev quay khỏi đèn chính. Sếp vào và ra phòng bằng đoạn Gemini Omni (`pipeline.md`).
+Đứng sát sau ghế thì tay giải thích trông như sắp cốc đầu dev, nên đặt sếp ra cạnh đầu bàn.
 
 **Dò tay bằng `ik` thay cho góc khớp.** Hai tay của model Quaternius không đối xứng theo trục `side/fwd/up`:
 cùng một bộ góc đảo dấu thì một tay thả xuống, tay kia chìa ra trước (cổ tay dev cũng phải lệch số

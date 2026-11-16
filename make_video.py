@@ -26,6 +26,8 @@ def voice_track(run_dir, fps, track_path):
     turns = json.loads((run_dir/'timeline.json').read_text(encoding='utf-8'))
     track, params = bytearray(), None
     for i, turn in enumerate(turns):
+        if 'insert' in turn:  # generated video spliced in here: no voice of ours
+            continue
         with wave.open(str(run_dir/'audio'/f'turn_{i:02d}.wav'), 'rb') as wav:
             params = params or wav.getparams()
             start = round((turn['voice_frame']-1)/fps*wav.getframerate())*wav.getsampwidth()*wav.getnchannels()
